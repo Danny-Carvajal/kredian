@@ -3,6 +3,7 @@
 > **Este archivo es la única fuente de verdad del proyecto.**
 > Si algo no está aquí, no está decidido. Si el PDF viejo o un chat dicen otra cosa, manda este archivo.
 > Cursor y cualquier IA deben leer este archivo completo antes de escribir código.
+> En especial la **sección 4** (quién hace qué) y la **sección 15** (guía por persona).
 > Solo Danny edita este archivo. Si querés cambiar algo, pedilo en el grupo.
 
 ---
@@ -84,32 +85,37 @@ Idioma de la interfaz: **español**.
 
 ---
 
-## 4. Equipo y roles
+## 4. Equipo y roles (actualizado 6 oct)
 
-| Persona | Nombre | Rol | Dueño de |
-|---|---|---|---|
-| 1 | José Daniel | Frontend y video | Pantallas, diseño, insignias de rango, edición del video |
-| 2 | Juliana | Base de datos y login | Supabase, tablas, login, perfil editable |
-| 3 | Daniel Corrales | Web3 | Contrato, wallet, sello en Sepolia, "Comprobar sello" |
-| 4 | Danny | Líder e integración | Lector de Credly, validación, este archivo, juntar todo en `main` |
+| Persona | Rama | Rol | Dueño de | No toca |
+|---|---|---|---|---|
+| José | `jose/...` | Login y base de datos | Supabase, tablas, Auth (Google + correo), `/login`, `/perfil`, RLS, publicar en Vercel | Contrato, sello, Credly, diseño visual de `/` |
+| Juliana | `juliana/...` | Web3 / sello | Contrato en Remix, wallet de pruebas, `/api/sellar`, `/api/comprobar`, botón "Comprobar sello", link a Etherscan | Login, tablas, Credly, diseño de pantallas |
+| Daniel | `daniel/...` | Diseño y video | Home `/`, tarjetas de credencial, insignias de rango, aplicar diseño a `/perfil` y `/u/[usuario]`, guion y edición del video | Supabase, contrato, APIs de Credly/sello |
+| Danny | `danny/...` | Líder e integración | Este archivo, lector de Credly, comparación de nombres, juntar PRs en `main`, tabla `rangos`, pegar el flujo completo | No reescribe el trabajo de otros: lo conecta |
+
+Si Cursor no sabe quién sos: mirá el prefijo de la rama (`jose/`, `juliana/`, `daniel/`, `danny/`) y actuá **solo** como esa persona. Si no hay rama clara, preguntá "¿sos José, Juliana, Daniel o Danny?" antes de codear.
 
 ---
 
 ## 5. Reglas de trabajo (para que nada se caiga a pedazos)
 
 1. **Nadie trabaja en `main`.** Cada quien usa su rama: `jose/...`, `juliana/...`, `daniel/...`, `danny/...`.
-2. **Solo Danny junta ramas en `main`** (Pull Request en GitHub).
+2. **Solo Danny junta ramas en `main`** (Pull Request en GitHub). Preferí **squash and merge**.
 3. **Pedazos chiquitos.** Un Pull Request = una cosa. Mejor 5 PR chiquitos que 1 gigante.
-4. **Antes de pedirle algo a Cursor**, decile: "Leé PROYECTO.md primero".
+4. **Cursor debe leer este archivo entero** (sobre todo secciones 2, 4 y 15) antes de escribir código.
 5. **Si Cursor propone algo que no está en este archivo, decile que no.**
 6. **Llaves secretas nunca van al repo.** Van en `.env.local`, que está en `.gitignore`. Se comparten por mensaje privado.
 7. **La wallet es solo de pruebas.** Nunca le metan dinero real.
 8. **Cada noche**, en el grupo: qué hice, qué me trabó, qué hago mañana. Una línea cada cosa.
 9. **Si algo te traba más de 1 hora, avisá.** No te quedés pegado solo.
+10. **No pises archivos de otra persona.** Si necesitás algo que todavía no está, esperá a `main` o pedilo en el grupo.
 
 ---
 
 ## 6. Datos (tablas en Supabase)
+
+Dueño: **José**. El resto las usa, no las rediseña.
 
 ### `profiles`
 | Campo | Tipo | Nota |
@@ -159,6 +165,8 @@ Idioma de la interfaz: **español**.
 
 ## 7. Cómo se calcula el sello
 
+Dueña: **Juliana**. No cambiar el orden de las claves ni el contrato mínimo.
+
 1. Se arma este objeto, **sin datos personales**:
 ```json
 {
@@ -200,13 +208,13 @@ La firma de transacciones se hace **solo en el servidor** (ruta API de Next.js),
 
 ## 8. Pantallas
 
-| Ruta | Qué muestra | Quién la ve |
-|---|---|---|
-| `/` | Inicio: qué es Kredian, botón "Entrar" | todos |
-| `/login` | Google o correo | todos |
-| `/perfil` | Editar perfil + pegar link + mis credenciales | dueño |
-| `/u/[usuario]` | Perfil público con insignias y "Comprobar sello" | todos, sin cuenta |
-| `/rangos` | Tabla de rangos (solo si sobra tiempo) | todos |
+| Ruta | Qué muestra | Quién la ve | Dueño del código |
+|---|---|---|---|
+| `/` | Inicio: qué es Kredian, botón "Entrar" | todos | Daniel (diseño). Ya existe un texto base. |
+| `/login` | Google o correo | todos | José |
+| `/perfil` | Editar perfil + pegar link + mis credenciales | dueño | José (datos). Daniel (look). Danny (pegar link → Credly). |
+| `/u/[usuario]` | Perfil público con insignias y "Comprobar sello" | todos, sin cuenta | José (página + datos). Juliana (botón sello). Daniel (look). |
+| `/rangos` | Tabla de rangos (solo si sobra tiempo) | todos | Danny datos, Daniel look |
 
 ### Variables de entorno (`.env.local`)
 ```
@@ -216,6 +224,8 @@ SEPOLIA_RPC_URL=
 SEPOLIA_PRIVATE_KEY=
 KREDIAN_CONTRACT_ADDRESS=
 ```
+
+José llena las dos de Supabase. Juliana llena las tres de Sepolia. Nadie las sube a GitHub.
 
 ---
 
@@ -231,45 +241,46 @@ Marcá `[x]` cuando termines una tarea.
 - [ ] Mandar su usuario de GitHub a Danny.
 
 **Danny**
-- [ ] Crear el repo `kredian` en GitHub.
+- [x] Crear el repo `kredian` en GitHub.
 - [ ] Invitar a los otros 3.
-- [ ] Subir este `PROYECTO.md`.
+- [x] Subir este `PROYECTO.md`.
 - [ ] Inscribirse en un curso gratis con insignia de Credly (ver sección 11).
 
-**Juliana**
+**José**
 - [ ] Crear cuenta en Supabase.
 - [ ] Crear el proyecto `kredian`.
 - [ ] Mandar URL y anon key a Danny por privado.
 
-**Daniel Corrales**
+**Juliana**
 - [ ] Instalar MetaMask en el navegador.
 - [ ] Crear una wallet **nueva** solo para Kredian.
 - [ ] Conseguir ETH de prueba de Sepolia en un faucet.
 - [ ] Crear cuenta gratis en Alchemy o Infura y sacar la URL RPC de Sepolia.
 
-**José Daniel**
+**Daniel**
 - [ ] Buscar 3 webs que le gusten como referencia visual.
 - [ ] Proponer 2 colores principales y un logo sencillo para Kredian.
 
 ### Miércoles 7 — Base del proyecto
 **Danny**
-- [ ] Con Cursor, crear el proyecto Next.js + TypeScript + Tailwind.
-- [ ] Crear `.gitignore` con `.env.local`.
-- [ ] Subir a `main`.
+- [x] Con Cursor, crear el proyecto Next.js + TypeScript + Tailwind.
+- [x] Crear `.gitignore` con `.env.local`.
+- [x] Subir a `main`.
 - [ ] Avisar en el grupo: "ya pueden clonar".
 
 **Todos**
 - [ ] Clonar el repo.
-- [ ] Crear su rama.
+- [ ] Crear su rama (`jose/...`, `juliana/...`, `daniel/...`, `danny/...`).
 - [ ] Correr `npm install` y `npm run dev`.
 - [ ] Confirmar que ven la página en `localhost:3000`.
+- [ ] Abrir Cursor **en esa carpeta**, pegar el prompt de la sección 15 de su nombre.
 
-**Juliana**
+**José**
 - [ ] Crear las 3 tablas de la sección 6.
 - [ ] Activar login con correo.
 - [ ] Activar login con Google.
 
-**Daniel Corrales**
+**Juliana**
 - [ ] Abrir Remix (remix.ethereum.org).
 - [ ] Pegar el contrato de la sección 7.
 - [ ] Desplegarlo en Sepolia con MetaMask.
@@ -279,11 +290,11 @@ Marcá `[x]` cuando termines una tarea.
 - [ ] Probar si la página pública de la insignia de Credly se puede leer desde el servidor.
 - [ ] Si no se puede, guardar un JSON de ejemplo como plan B (sección 10).
 
-**José Daniel**
+**Daniel**
 - [ ] Diseñar la pantalla `/` (inicio).
 
 ### Jueves 8 — Cada pieza funciona sola
-**Juliana**
+**José**
 - [ ] Pantalla `/login` funcionando.
 - [ ] Al entrar, crear la fila en `profiles`.
 - [ ] Pantalla `/perfil` con nombre, foto y descripción editables.
@@ -292,11 +303,11 @@ Marcá `[x]` cuando termines una tarea.
 - [ ] Ruta API `/api/credly` que recibe un link y devuelve los datos de la insignia.
 - [ ] Función que compara nombres (sin tildes, sin mayúsculas).
 
-**Daniel Corrales**
+**Juliana**
 - [ ] Ruta API `/api/sellar` que recibe datos, calcula el hash y lo manda al contrato.
 - [ ] Ruta API `/api/comprobar` que recalcula y busca el hash en el contrato.
 
-**José Daniel**
+**Daniel**
 - [ ] Componente de tarjeta de credencial.
 - [ ] 4 insignias de rango (Bronce, Plata, Oro, Platino).
 
@@ -305,15 +316,15 @@ Marcá `[x]` cuando termines una tarea.
 - [ ] Juntar las ramas en `main`.
 - [ ] Conectar: pegar link → leer → validar → sellar → guardar.
 
-**Juliana**
+**José**
 - [ ] Pantalla pública `/u/[usuario]`.
 - [ ] Revisar permisos RLS.
 
-**Daniel Corrales**
+**Juliana**
 - [ ] Botón "Comprobar sello" en el perfil público.
 - [ ] Link a Etherscan por cada credencial.
 
-**José Daniel**
+**Daniel**
 - [ ] Aplicar diseño a `/perfil` y `/u/[usuario]`.
 - [ ] Escribir el guion del video (sección 12).
 
@@ -323,16 +334,16 @@ Marcá `[x]` cuando termines una tarea.
 ### Sábado 10 — Rangos y pulido
 - [ ] Danny: llenar la tabla `rangos` con ~20 certificaciones.
 - [ ] Danny: asignar rango al guardar una credencial.
-- [ ] Juliana: publicar en Vercel.
-- [ ] José Daniel: estados de carga y mensajes de error bonitos.
-- [ ] Daniel Corrales: probar el sello 3 veces seguidas sin fallos.
+- [ ] José: publicar en Vercel.
+- [ ] Daniel: estados de carga y mensajes de error bonitos.
+- [ ] Juliana: probar el sello 3 veces seguidas sin fallos.
 - [ ] Todos: anotar errores en el grupo.
 
 ### Domingo 11 — Video
 - [ ] Todos: congelar código a mediodía. Después solo se arreglan errores.
-- [ ] José Daniel: grabar pantalla del flujo completo.
+- [ ] Daniel: grabar pantalla del flujo completo.
 - [ ] Danny: grabar o escribir la voz del pitch.
-- [ ] José Daniel: editar el video.
+- [ ] Daniel: editar el video.
 
 ### Lunes 12 — Entrega
 - [ ] Ver el video completo entre todos.
@@ -370,6 +381,8 @@ Lo ideal: que al menos 2 del equipo saquen una, para probar la comparación de n
 
 ## 12. Guion del video (borrador)
 
+Dueño: **Daniel** (guion, grabación, edición). Danny pone la voz del pitch.
+
 1. **Problema (15 s):** "¿Cómo sabés que ese AWS en el CV es real?"
 2. **Kredian (10 s):** qué es, en una frase.
 3. **Demo (60–90 s):** entrar → pegar link → ver insignia verificada → sello en Sepolia → perfil público → "Comprobar sello".
@@ -379,21 +392,19 @@ Lo ideal: que al menos 2 del equipo saquen una, para probar la comparación de n
 
 ---
 
-## 13. Prompt de contexto para Cursor
+## 13. Cómo abrir Cursor (todos)
 
-Pegar esto al abrir un chat nuevo en Cursor:
+1. Cloná el repo (Git Bash: usá `/` en las rutas, no `\`).
+2. Creá tu rama. Ejemplos:
+   - José: `git checkout -b jose/login-supabase`
+   - Juliana: `git checkout -b juliana/contrato-sellos`
+   - Daniel: `git checkout -b daniel/diseno-home`
+   - Danny: `git checkout -b danny/api-credly`
+3. `npm install` y `npm run dev`. Tenés que ver Kredian en http://localhost:3000.
+4. Abrí la carpeta del repo en Cursor.
+5. Chat nuevo: pegá **el bloque de tu nombre** en la sección 15.
 
-```
-Leé el archivo PROYECTO.md completo antes de hacer nada. Es la única fuente de verdad.
-Estamos construyendo Kredian: una web que lee insignias públicas de Credly, valida
-que el nombre coincida con el perfil y sella un hash en Sepolia.
-Stack: Next.js (App Router) + TypeScript + Tailwind + Supabase + ethers.js v6.
-NO construyas nada de emisores, CSV, sal, llaves por correo, Resend ni login con Apple.
-Si algo no está en PROYECTO.md, preguntame antes de inventarlo.
-Hacé cambios pequeños y explicame cada paso en español sencillo, porque no tengo
-experiencia programando.
-Mi tarea de hoy es: [ESCRIBÍ AQUÍ TU TAREA]
-```
+Cursor también tiene una regla en `.cursor/rules` que le dice que lea este archivo. Aun así, pegá el prompt. No cuesta nada y evita que se ponga a hacer el trabajo de otra persona.
 
 ---
 
@@ -406,3 +417,150 @@ Mi tarea de hoy es: [ESCRIBÍ AQUÍ TU TAREA]
 | 6 oct | Se quita emisor, CSV, sal, llaves y Resend. |
 | 6 oct | Nombre del proyecto: Kredian. |
 | 6 oct | Entrega: video vendiendo el producto. |
+| 6 oct | Roles: José = Supabase/login; Juliana = contrato y sello; Daniel = diseño y video; Danny = Credly e integración. |
+
+---
+
+## 15. Guía por persona (para humanos y para Cursor)
+
+Reglas comunes para Cursor, con cualquiera de los 4:
+
+- Leé `PROYECTO.md` completo. Es la única fuente de verdad.
+- Stack: Next.js App Router + TypeScript + Tailwind. No cambies el stack.
+- UI en español. Explicá en español sencillo (el equipo no asume experiencia de programación).
+- Cambios chicos. Un PR = una cosa.
+- No inventes emisores, CSV, Resend, login con Apple, ni otras fuentes además de Credly.
+- No commitees `.env.local` ni llaves.
+- Si falta una pieza de otra persona, dejá un TODO o un placeholder. No la construyas vos.
+
+---
+
+### José — Login y Supabase
+
+**Tu trabajo:** que alguien pueda entrar (Google o correo), tener fila en `profiles`, editar perfil y que exista `/u/[usuario]` público.
+
+**Archivos que sí podés crear/editar:** cliente de Supabase, middleware de sesión, `src/app/login/`, `src/app/perfil/` (datos, no el look final), `src/app/u/[usuario]/` (datos), SQL/migraciones de las 3 tablas, RLS.
+
+**No hagas:** contrato Solidity, `/api/sellar`, `/api/credly`, rediseñar la home, el video.
+
+**Orden sugerido**
+1. Proyecto Supabase `kredian`. Copiá URL y anon key a `.env.local`. Mandáselas a Danny por privado.
+2. Tablas `profiles`, `credenciales`, `rangos` (sección 6) + RLS.
+3. Auth: correo y Google.
+4. `/login`. Al entrar, crear fila en `profiles` si no existe.
+5. `/perfil` editable (nombre, foto, descripción). Dejá un hueco visible para "pegar link de Credly" (eso lo conecta Danny).
+6. `/u/[usuario]` leyendo `profiles` + `credenciales`.
+7. Sábado: publicar en Vercel (plan B: video en localhost).
+
+**Prompt para pegar en Cursor:**
+
+```
+Leé PROYECTO.md completo (secciones 2, 4, 6, 8 y 15 — José).
+Soy José. Rama jose/...
+Hago login y base de datos con Supabase: tablas, RLS, Auth (correo + Google),
+rutas /login, /perfil y /u/[usuario].
+NO toques contrato, sello, Credly ni el diseño visual de la home.
+Stack: Next.js App Router + TypeScript + Tailwind + Supabase.
+UI en español. Cambios chicos. Si algo no está en PROYECTO.md, preguntame.
+Mi tarea de hoy es: [ESCRIBÍ ACÁ, ej. crear las 3 tablas y /login]
+```
+
+---
+
+### Juliana — Contrato y sello
+
+**Tu trabajo:** contrato mínimo en Sepolia y las APIs que sellan y comprueban el hash. Después el botón "Comprobar sello" y el link a Etherscan.
+
+**Archivos que sí podés crear/editar:** copia del contrato (solo el de la sección 7), `src/app/api/sellar/`, `src/app/api/comprobar/`, helper de ethers.js v6, el botón de comprobar en el perfil público cuando esa página exista.
+
+**No hagas:** Supabase, login, lector de Credly, diseño de `/`.
+
+**Orden sugerido**
+1. MetaMask, wallet nueva de pruebas, ETH de Sepolia, URL RPC (Alchemy o Infura).
+2. Remix: pegar el contrato de la sección 7, desplegar en Sepolia, mandar address a Danny.
+3. Poner `SEPOLIA_RPC_URL`, `SEPOLIA_PRIVATE_KEY` y `KREDIAN_CONTRACT_ADDRESS` en `.env.local` (nunca al repo).
+4. `/api/sellar`: arma el objeto de la sección 7, hash sha256, `sellar(bytes32)`, devolver `hash` + `tx_hash`.
+5. `/api/comprobar`: recalcular hash y leer `selladoEn` en el contrato.
+6. Botón "Comprobar sello" + link a Etherscan (`https://sepolia.etherscan.io/tx/{tx_hash}`).
+7. Probar 3 sellos seguidos sin fallos.
+
+**Prompt para pegar en Cursor:**
+
+```
+Leé PROYECTO.md completo (secciones 2, 4, 7, 8 y 15 — Juliana).
+Soy Juliana. Rama juliana/...
+Hago el sello en Sepolia: contrato mínimo de la sección 7 (Remix),
+ethers.js v6, rutas /api/sellar y /api/comprobar, botón Comprobar sello
+y link a Etherscan. La firma va SOLO en el servidor.
+NO toques login, Supabase, Credly ni el diseño de pantallas.
+NO cambies el contrato ni el orden de las claves del hash.
+Stack: Next.js App Router + TypeScript + Tailwind + ethers.js v6.
+UI en español. Cambios chicos. Si algo no está en PROYECTO.md, preguntame.
+Mi tarea de hoy es: [ESCRIBÍ ACÁ, ej. desplegar el contrato y /api/sellar]
+```
+
+---
+
+### Daniel — Diseño y video
+
+**Tu trabajo:** que se vea como producto. Home, tarjetas, rangos, pulir `/perfil` y `/u/[usuario]`, guion y video.
+
+**Archivos que sí podés crear/editar:** `src/app/page.tsx`, `src/app/globals.css`, componentes visuales (tarjeta de credencial, insignias Bronce/Plata/Oro/Platino), estilos de `/login`, `/perfil` y `/u/[usuario]` **sin cambiar** la lógica de login/sello/Credly.
+
+**No hagas:** tablas, Auth, contrato, APIs.
+
+**Orden sugerido**
+1. 3 referencias visuales + 2 colores + logo sencillo. Pasalo al grupo.
+2. Diseñar `/` (ya hay texto base y botón Entrar → `/login`).
+3. Componente de tarjeta de credencial + 4 insignias de rango.
+4. Aplicar el look a `/perfil` y `/u/[usuario]` cuando existan.
+5. Estados de carga y errores.
+6. Guion (sección 12), grabar demo, editar video.
+
+**Prompt para pegar en Cursor:**
+
+```
+Leé PROYECTO.md completo (secciones 1, 2, 4, 8, 12 y 15 — Daniel).
+Soy Daniel. Rama daniel/...
+Hago diseño UI en español con Tailwind: home /, tarjetas de credencial,
+insignias de rango (bronce, plata, oro, platino) y el look de /perfil y
+/u/[usuario]. También el guion del video (sección 12).
+NO toques Supabase, login, contrato, ni las APIs de Credly/sello.
+No cambies el texto de qué es Kredian (sección 1) salvo para acortarlo.
+Stack: Next.js App Router + TypeScript + Tailwind.
+Cambios chicos. Si algo no está en PROYECTO.md, preguntame.
+Mi tarea de hoy es: [ESCRIBÍ ACÁ, ej. diseñar la home /]
+```
+
+---
+
+### Danny — Credly e integración
+
+**Tu trabajo:** leer Credly, comparar nombres, llenar rangos, juntar PRs en `main`, conectar pegar-link → leer → validar → sellar → guardar.
+
+**Archivos que sí podés crear/editar:** `src/app/api/credly/`, utilidad de comparar nombres, seed/uso de `rangos`, el pegado de link en `/perfil` cuando José ya tenga la pantalla, este `PROYECTO.md`.
+
+**No hagas:** reescribir login, contrato o el diseño de Daniel. Integra.
+
+**Orden sugerido**
+1. Invitar al equipo al repo. Avisar "ya pueden clonar".
+2. Insignia real de Credly (sección 11).
+3. Probar fetch de la página pública. Si no se puede: JSON de ejemplo (plan B).
+4. `/api/credly` + comparación de nombres (sin tildes, sin mayúsculas).
+5. Mergear PRs (squash). Conectar el flujo el viernes.
+6. Tabla `rangos` (~20) y asignar rango al guardar.
+7. Voz del pitch el domingo.
+
+**Prompt para pegar en Cursor:**
+
+```
+Leé PROYECTO.md completo (secciones 2, 4, 6, 10, 11 y 15 — Danny).
+Soy Danny. Rama danny/... (o la que esté usando el agente).
+Hago el lector de Credly, la comparación de nombres, la tabla de rangos
+y juntar las piezas en main. Soy el único que mergea a main.
+NO construyas login, contrato ni un diseño nuevo de la home.
+NO inventes emisores, CSV, Resend ni otras fuentes.
+Stack: Next.js App Router + TypeScript + Tailwind.
+UI en español. Cambios chicos. Si algo no está en PROYECTO.md, preguntame.
+Mi tarea de hoy es: [ESCRIBÍ ACÁ]
+```
