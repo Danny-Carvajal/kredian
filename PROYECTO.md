@@ -329,11 +329,11 @@ Estado al 8 oct: Next.js + Tailwind + home stub en `main`. Falta login, tablas, 
 
 Cursor escribe; Danny pega keys y SQL.
 
-- [ ] Archivo SQL: tablas `profiles`, `credenciales`, `rangos` + RLS (sección 6).
-- [ ] Cliente Supabase en Next.js.
-- [ ] `/login` con correo. Al entrar, crear fila en `profiles` si no existe.
-- [ ] `/perfil`: nombre, foto, descripción editables + hueco "pegar link de Credly".
-- [ ] Probar: registrarse, entrar, ver `/perfil`.
+- [x] Archivo SQL: tablas `profiles`, `credenciales`, `rangos` + RLS (sección 6).
+- [x] Cliente Supabase en Next.js.
+- [x] `/login` con correo. Al entrar, crear fila en `profiles` si no existe.
+- [x] `/perfil`: nombre, foto, descripción editables + hueco "pegar link de Credly".
+- [ ] Probar: registrarse, entrar, ver `/perfil`. (Danny, con keys reales)
 
 #### Viernes 9 — Flujo que se graba
 
