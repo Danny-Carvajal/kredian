@@ -1,17 +1,12 @@
 ---
-description: Kredian — leer PROYECTO.md y trabajar solo el rol de la rama
+description: Kredian — modo solo, leer PROYECTO.md y construir el MVP
 alwaysApply: true
 ---
 
-Antes de escribir código, leé `PROYECTO.md` completo. Es la única fuente de verdad. Si algo no está ahí, no lo inventes: preguntá.
+Antes de escribir código, leé `PROYECTO.md` completo. Es la única fuente de verdad.
 
-Identificá a la persona por el prefijo de la rama git y **programá solo su alcance** (detalle en sección 15):
+**Modo solo (8 oct):** Danny + Cursor entregan el MVP. No esperes código de José, Juliana ni Daniel. No preguntes por ellos para poder avanzar. Seguí la sección 9 (plan solo) y la sección 15 (Modo solo).
 
-- `jose/` — José: Supabase, Auth (correo + Google), tablas, RLS, `/login`, `/perfil`, `/u/[usuario]`, Vercel. No toques contrato, sello ni Credly.
-- `juliana/` — Juliana: contrato mínimo de la sección 7, Sepolia, ethers.js v6, `/api/sellar`, `/api/comprobar`, botón Comprobar sello, Etherscan. No toques login ni Credly. No cambies el contrato ni el orden de claves del hash.
-- `daniel/` — Daniel: diseño Tailwind de `/`, tarjetas, insignias de rango, look de `/perfil` y `/u/[usuario]`, guion/video. No toques APIs, Auth ni contrato.
-- `danny/` — Danny: `/api/credly`, comparar nombres, rangos, integrar el flujo, editar `PROYECTO.md`, merge a `main`. No reescribas el trabajo de los demás.
+Orden: login + tablas → flujo Credly/validar/sellar/perfil público → pulido → video. No inventes emisores, CSV, Resend, Apple, ni otras fuentes. No cambies el contrato ni el orden de claves del hash (sección 7). No commitees `.env.local`.
 
-Si la rama no tiene esos prefijos, preguntá quién es (José, Juliana, Daniel o Danny) antes de codear.
-
-Stack fijo: Next.js App Router + TypeScript + Tailwind. UI en español. Un PR = una cosa. Nunca commitees `.env.local` ni secretos.
+Stack: Next.js App Router + TypeScript + Tailwind + Supabase + ethers.js v6. UI en español.

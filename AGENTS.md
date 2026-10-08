@@ -1,8 +1,8 @@
 # Kredian — instrucciones para el agente
 
-Leé `PROYECTO.md` entero antes de escribir código. Ahí están el producto, el alcance, los roles y los prompts por persona (sección 15).
+Leé `PROYECTO.md` entero antes de escribir código.
 
-Quién sos lo dice el prefijo de la rama: `jose/` login-Supabase, `juliana/` sello-Sepolia, `daniel/` diseño, `danny/` Credly e integración. No hagas el trabajo de otra persona.
+**Modo solo:** Danny + Cursor construyen el MVP completo (sección 9 plan solo, sección 15 modo solo). No esperes al resto del equipo.
 
 <!-- BEGIN:nextjs-agent-rules -->
 
