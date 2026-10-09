@@ -2,33 +2,52 @@
 
 import { useState } from "react";
 
-interface PropsComprobarSello {
-  hash?: string;
-  txHash?: string;
-  // O los datos para recalcularlo si se requiere
-  datosCredencial?: {
-    fuente: string;
-    badge_id: string;
-    titulo: string;
-    emisor: string;
-    fecha_emision: string;
-    estado: string;
-    verificado_en: string;
-  };
+const ETHERSCAN_BASE_URL = "https://sepolia.etherscan.io";
+
+export interface DatosCredencialSello {
+  fuente: string;
+  badge_id: string;
+  titulo: string;
+  emisor: string;
+  fecha_emision: string;
+  estado: string;
+  verificado_en: string;
 }
 
-export default function BotonComprobarSello({
-  hash,
-  txHash,
-  datosCredencial,
-}: PropsComprobarSello) {
+interface PropsComprobarSello {
+  /** Hash guardado en `credenciales.hash`. */
+  hash?: string | null;
+  /** Transacción guardada en `credenciales.tx_hash` (para el link a Etherscan). */
+  txHash?: string | null;
+  /**
+   * Datos guardados de la credencial. Si se pasan, el servidor RECALCULA el hash
+   * (sección 7 de PROYECTO.md) y lo compara con `hash`. Es la forma recomendada.
+   */
+  datosCredencial?: DatosCredencialSello;
+}
+
+interface Resultado {
+  verificado: boolean;
+  mensaje: string;
+  fecha?: string;
+  etherscanUrl?: string;
+}
+
+function formatearFecha(iso: string): string {
+  return new Intl.DateTimeFormat("es-CR", { dateStyle: "long", timeStyle: "short" }).format(
+    new Date(iso),
+  );
+}
+
+/**
+ * Botón "Comprobar sello" + link a Etherscan, para cada credencial del perfil público.
+ * Consulta /api/comprobar (solo lectura, no gasta gas ni necesita wallet).
+ */
+export default function BotonComprobarSello({ hash, txHash, datosCredencial }: PropsComprobarSello) {
   const [cargando, setCargando] = useState(false);
-  const [resultado, setResultado] = useState<{
-    verificado?: boolean;
-    mensaje?: string;
-    fecha?: string;
-    etherscanUrl?: string;
-  } | null>(null);
+  const [resultado, setResultado] = useState<Resultado | null>(null);
+
+  const sinDatos = !hash && !datosCredencial;
 
   const comprobar = async () => {
     setCargando(true);
@@ -37,18 +56,18 @@ export default function BotonComprobarSello({
       const res = await fetch("/api/comprobar", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(hash ? { hash } : datosCredencial),
+        body: JSON.stringify({ ...(datosCredencial ?? {}), ...(hash ? { hash } : {}) }),
       });
 
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
       if (!res.ok) {
         setResultado({
           verificado: false,
-          mensaje: data.error || "Error al conectar con la blockchain",
+          mensaje: data.error || "No se pudo conectar con la blockchain. Probá de nuevo.",
         });
       } else {
         setResultado({
-          verificado: data.verificado,
+          verificado: Boolean(data.verificado),
           mensaje: data.mensaje,
           fecha: data.sellado_en_fecha,
           etherscanUrl: data.etherscan_contract_url,
@@ -57,65 +76,74 @@ export default function BotonComprobarSello({
     } catch {
       setResultado({
         verificado: false,
-        mensaje: "Error de red al comprobar el sello",
+        mensaje: "Error de red al comprobar el sello. Revisá tu conexión.",
       });
     } finally {
       setCargando(false);
     }
   };
 
+  const linkEtherscan = txHash ? `${ETHERSCAN_BASE_URL}/tx/${txHash}` : resultado?.etherscanUrl;
+
   return (
     <div className="flex flex-col gap-2">
-      <div className="flex items-center gap-3">
+      <div className="flex flex-wrap items-center gap-3">
         <button
+          type="button"
           onClick={comprobar}
-          disabled={cargando}
-          className="inline-flex items-center gap-2 px-3 py-1.5 text-xs font-semibold rounded-md bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-200 transition-colors disabled:opacity-50 cursor-pointer"
+          disabled={cargando || sinDatos}
+          aria-busy={cargando}
+          className="inline-flex cursor-pointer items-center gap-2 rounded-md border border-indigo-200 bg-indigo-50 px-3 py-1.5 text-xs font-semibold text-indigo-700 transition-colors hover:bg-indigo-100 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {cargando ? (
             <>
-              <span className="inline-block w-3 h-3 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin"></span>
-              Consultando Sepolia...
+              <span
+                aria-hidden
+                className="inline-block h-3 w-3 animate-spin rounded-full border-2 border-indigo-600 border-t-transparent"
+              />
+              Consultando Sepolia…
             </>
           ) : (
             <>
-              <span>🛡️</span>
+              <span aria-hidden>🛡️</span>
               Comprobar sello
             </>
           )}
         </button>
 
-        {txHash && (
+        {linkEtherscan && (
           <a
-            href={`https://sepolia.etherscan.io/tx/${txHash}`}
+            href={linkEtherscan}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-xs text-gray-500 hover:text-indigo-600 underline flex items-center gap-1"
+            className="flex items-center gap-1 text-xs text-zinc-500 underline hover:text-indigo-600"
           >
-            Ver en Etherscan ↗
+            {txHash ? "Ver transacción en Etherscan ↗" : "Ver contrato en Etherscan ↗"}
           </a>
         )}
       </div>
 
-      {resultado && (
-        <div
-          className={`text-xs p-2.5 rounded-md border ${
-            resultado.verificado
-              ? "bg-green-50 border-green-200 text-green-800"
-              : "bg-red-50 border-red-200 text-red-800"
-          }`}
-        >
-          <div className="font-semibold flex items-center gap-1">
-            {resultado.verificado ? "✅ Sello Válido e Inmutable" : "❌ No verificado"}
-          </div>
-          <p className="mt-0.5">{resultado.mensaje}</p>
-          {resultado.fecha && (
-            <p className="mt-1 text-[11px] text-gray-600">
-              Sellado en bloque: {new Date(resultado.fecha).toLocaleString()}
+      <div aria-live="polite">
+        {resultado && (
+          <div
+            className={`rounded-md border p-2.5 text-xs ${
+              resultado.verificado
+                ? "border-green-200 bg-green-50 text-green-800"
+                : "border-red-200 bg-red-50 text-red-800"
+            }`}
+          >
+            <p className="font-semibold">
+              {resultado.verificado ? "✅ Sello verificado" : "❌ Sello no verificado"}
             </p>
-          )}
-        </div>
-      )}
+            <p className="mt-0.5">{resultado.mensaje}</p>
+            {resultado.fecha && (
+              <p className="mt-1 text-[11px] text-zinc-600">
+                Sellado en Sepolia el {formatearFecha(resultado.fecha)}
+              </p>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

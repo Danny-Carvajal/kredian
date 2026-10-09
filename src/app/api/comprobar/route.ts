@@ -1,61 +1,99 @@
 import { NextRequest, NextResponse } from "next/server";
-import { calcularHashSello, getContractReadOnly, DatosCredencialParaSello } from "@/lib/blockchain";
+import {
+  calcularHashSello,
+  ErrorDatosSello,
+  esHashValido,
+  getDireccionContrato,
+  leerSelladoEn,
+  mensajeDeError,
+  urlEtherscanContrato,
+  validarDatosSello,
+} from "@/lib/blockchain";
 
+export const runtime = "nodejs";
+
+/**
+ * POST /api/comprobar  (pública, solo lectura; no gasta gas)
+ *
+ * Body (cualquiera de estas formas):
+ *  - Datos de la credencial: { fuente, badge_id, titulo, emisor, fecha_emision, estado, verificado_en }
+ *    → se RECALCULA el hash (sección 7 de PROYECTO.md). Es la forma recomendada.
+ *  - Datos + { hash }: además confirma que el hash guardado coincide con el recalculado
+ *    (detecta si alguien editó la credencial en la base de datos después de sellarla).
+ *  - Solo { hash }: comprueba que ese hash exista en el contrato.
+ */
 export async function POST(req: NextRequest) {
+  let body: Record<string, unknown>;
   try {
-    const body = await req.json();
+    const json = await req.json();
+    if (!json || typeof json !== "object") throw new Error();
+    body = json as Record<string, unknown>;
+  } catch {
+    return NextResponse.json({ error: "El cuerpo debe ser un objeto JSON válido" }, { status: 400 });
+  }
 
-    // Puede recibir el hash directo o los datos de la credencial para recalcular
-    let hash = body.hash;
-
-    if (!hash) {
-      const { fuente, badge_id, titulo, emisor, fecha_emision, estado, verificado_en } = body;
-      if (!fuente || !badge_id || !titulo || !emisor || !fecha_emision || !estado || !verificado_en) {
-        return NextResponse.json(
-          { error: "Debe proveer el 'hash' o los datos completos de la credencial para comprobar" },
-          { status: 400 }
-        );
-      }
-      const datos: DatosCredencialParaSello = {
-        fuente,
-        badge_id,
-        titulo,
-        emisor,
-        fecha_emision,
-        estado,
-        verificado_en,
-      };
-      hash = calcularHashSello(datos);
+  try {
+    const hashGuardado = body.hash;
+    if (hashGuardado !== undefined && !esHashValido(hashGuardado)) {
+      return NextResponse.json(
+        { error: "hash debe ser un bytes32 en hex (0x + 64 caracteres)" },
+        { status: 400 },
+      );
     }
 
-    // Consultar el contrato en Sepolia (solo lectura pública)
-    const contract = getContractReadOnly();
-    const timestampBigInt = await contract.selladoEn(hash);
-    const timestamp = Number(timestampBigInt);
+    const tieneDatos = body.badge_id !== undefined || body.titulo !== undefined;
+    let hash: string;
+
+    if (tieneDatos) {
+      hash = calcularHashSello(validarDatosSello(body));
+      if (hashGuardado && hashGuardado.toLowerCase() !== hash.toLowerCase()) {
+        return NextResponse.json({
+          verificado: false,
+          hash,
+          hash_guardado: hashGuardado,
+          mensaje: "Los datos de la credencial no coinciden con el sello: fueron modificados.",
+        });
+      }
+    } else if (hashGuardado) {
+      hash = hashGuardado;
+    } else {
+      return NextResponse.json(
+        { error: "Debe enviar los datos completos de la credencial o el 'hash' para comprobar" },
+        { status: 400 },
+      );
+    }
+
+    const direccion = getDireccionContrato();
+    const timestamp = await leerSelladoEn(hash);
 
     if (timestamp === 0) {
       return NextResponse.json({
         verificado: false,
         hash,
         mensaje: "El sello no existe en la blockchain o los datos fueron alterados.",
+        etherscan_contract_url: urlEtherscanContrato(direccion),
       });
     }
-
-    const fechaSellado = new Date(timestamp * 1000).toISOString();
 
     return NextResponse.json({
       verificado: true,
       hash,
+      recalculado: tieneDatos,
       sellado_en_timestamp: timestamp,
-      sellado_en_fecha: fechaSellado,
-      mensaje: "Sello verificado. La credencial existe y no ha sido alterada.",
-      etherscan_contract_url: `https://sepolia.etherscan.io/address/${process.env.KREDIAN_CONTRACT_ADDRESS}`,
+      sellado_en_fecha: new Date(timestamp * 1000).toISOString(),
+      mensaje: tieneDatos
+        ? "Sello verificado. La credencial existe en Sepolia y no ha sido alterada."
+        : "Sello verificado. El hash existe en Sepolia.",
+      etherscan_contract_url: urlEtherscanContrato(direccion),
     });
-  } catch (error: any) {
+  } catch (error) {
+    if (error instanceof ErrorDatosSello) {
+      return NextResponse.json({ error: error.message }, { status: 400 });
+    }
     console.error("Error al comprobar sello:", error);
     return NextResponse.json(
-      { error: error?.reason || error?.message || "Error al consultar la blockchain" },
-      { status: 500 }
+      { error: mensajeDeError(error, "Error al consultar la blockchain") },
+      { status: 500 },
     );
   }
 }
