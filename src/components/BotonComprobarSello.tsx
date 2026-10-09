@@ -11,7 +11,8 @@ export interface DatosCredencialSello {
   emisor: string;
   fecha_emision: string;
   estado: string;
-  verificado_en: string;
+  verificado_en?: string;
+  sellado_en?: string;
 }
 
 interface PropsComprobarSello {
@@ -83,7 +84,9 @@ export default function BotonComprobarSello({ hash, txHash, datosCredencial }: P
     }
   };
 
-  const linkEtherscan = txHash ? `${ETHERSCAN_BASE_URL}/tx/${txHash}` : resultado?.etherscanUrl;
+  const linkEtherscan = txHash
+    ? `${ETHERSCAN_BASE_URL}/tx/${txHash.trim().startsWith("0x") ? txHash.trim() : `0x${txHash.trim()}`}`
+    : resultado?.etherscanUrl;
 
   return (
     <div className="flex flex-col gap-2">

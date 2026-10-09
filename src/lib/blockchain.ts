@@ -31,14 +31,13 @@ export interface DatosCredencialParaSello {
 /** Error de datos de entrada (se responde 400, no 500). */
 export class ErrorDatosSello extends Error {}
 
-const CLAVES_SELLO = [
+const CLAVES_REQUERIDAS = [
   "fuente",
   "badge_id",
   "titulo",
   "emisor",
   "fecha_emision",
   "estado",
-  "verificado_en",
 ] as const;
 
 /**
@@ -46,7 +45,7 @@ const CLAVES_SELLO = [
  * Supabase devuelve las columnas `date` así, pero aceptamos también un ISO completo
  * (ej. "2026-10-08T00:00:00Z") y nos quedamos con la parte de la fecha.
  */
-function normalizarFechaEmision(valor: string): string {
+export function normalizarFechaEmision(valor: string): string {
   const fecha = valor.trim().slice(0, 10);
   if (!/^\d{4}-\d{2}-\d{2}$/.test(fecha) || Number.isNaN(Date.parse(fecha))) {
     throw new ErrorDatosSello("fecha_emision debe tener formato YYYY-MM-DD");
@@ -61,7 +60,7 @@ function normalizarFechaEmision(valor: string): string {
  * "2026-10-08T23:12:34.567+00:00". Sin esta normalización, el hash recalculado
  * con los datos guardados NO coincidiría con el sellado y "Comprobar sello" fallaría.
  */
-function normalizarVerificadoEn(valor: string): string {
+export function normalizarVerificadoEn(valor: string): string {
   const ms = Date.parse(valor);
   if (Number.isNaN(ms)) {
     throw new ErrorDatosSello("verificado_en debe ser una fecha ISO válida");
@@ -71,15 +70,23 @@ function normalizarVerificadoEn(valor: string): string {
 
 /**
  * Valida un objeto desconocido (ej. el body de una petición) y devuelve los datos
- * del sello ya normalizados. Lanza ErrorDatosSello si algo falta o es inválido.
+ * del sello ya normalizados.
+ *
+ * @param entrada Objeto con los datos de la credencial.
+ * @param permitirGenerarVerificadoEn Si es true y no se envía verificado_en/sellado_en, genera la fecha actual en ISO.
+ *
+ * Soporta `verificado_en` o `sellado_en` (este último es el nombre de la columna en Supabase).
  */
-export function validarDatosSello(entrada: unknown): DatosCredencialParaSello {
+export function validarDatosSello(
+  entrada: unknown,
+  permitirGenerarVerificadoEn = false,
+): DatosCredencialParaSello {
   if (!entrada || typeof entrada !== "object") {
     throw new ErrorDatosSello("Se esperaba un objeto JSON con los datos de la credencial");
   }
   const obj = entrada as Record<string, unknown>;
 
-  for (const clave of CLAVES_SELLO) {
+  for (const clave of CLAVES_REQUERIDAS) {
     const valor = obj[clave];
     if (typeof valor !== "string" || valor.trim() === "") {
       throw new ErrorDatosSello(`Falta el campo "${clave}" o no es texto`);
@@ -89,21 +96,35 @@ export function validarDatosSello(entrada: unknown): DatosCredencialParaSello {
     }
   }
 
-  if (obj.fuente !== "credly") {
+  const fuente = (obj.fuente as string).trim().toLowerCase();
+  if (fuente !== "credly") {
     throw new ErrorDatosSello('Por ahora la única fuente permitida es "credly"');
   }
-  if (!ESTADOS_VALIDOS.includes(obj.estado as EstadoCredencial)) {
+
+  const estado = (obj.estado as string).trim().toLowerCase();
+  if (!ESTADOS_VALIDOS.includes(estado as EstadoCredencial)) {
     throw new ErrorDatosSello(`estado debe ser uno de: ${ESTADOS_VALIDOS.join(", ")}`);
   }
 
+  // Acepta verificado_en o sellado_en (nombre de la columna en Supabase)
+  const rawVerificado = obj.verificado_en ?? obj.sellado_en;
+  let verificadoEn: string;
+  if (typeof rawVerificado === "string" && rawVerificado.trim() !== "") {
+    verificadoEn = normalizarVerificadoEn(rawVerificado);
+  } else if (permitirGenerarVerificadoEn) {
+    verificadoEn = new Date().toISOString();
+  } else {
+    throw new ErrorDatosSello('Falta el campo "verificado_en" (o "sellado_en") o no es texto');
+  }
+
   return {
-    fuente: obj.fuente as string,
-    badge_id: obj.badge_id as string,
-    titulo: obj.titulo as string,
-    emisor: obj.emisor as string,
-    fecha_emision: normalizarFechaEmision(obj.fecha_emision as string),
-    estado: obj.estado as string,
-    verificado_en: normalizarVerificadoEn(obj.verificado_en as string),
+    fuente,
+    badge_id: (obj.badge_id as string).trim(),
+    titulo: (obj.titulo as string).trim(),
+    emisor: (obj.emisor as string).trim(),
+    fecha_emision: normalizarFechaEmision(String(obj.fecha_emision)),
+    estado,
+    verificado_en: verificadoEn,
   };
 }
 
@@ -141,13 +162,31 @@ export function calcularHashSello(datos: DatosCredencialParaSello): string {
   return sha256(toUtf8Bytes(textoCanonicoSello(datos)));
 }
 
+/**
+ * Normaliza un hash a formato bytes32 en minúsculas (0x + 64 caracteres hex).
+ * Devuelve null si no es un hash válido.
+ */
+export function normalizarHash(hash: unknown): string | null {
+  if (typeof hash !== "string") return null;
+  const limpio = hash.trim();
+  if (/^0x[0-9a-fA-F]{64}$/.test(limpio)) {
+    return limpio.toLowerCase();
+  }
+  if (/^[0-9a-fA-F]{64}$/.test(limpio)) {
+    return `0x${limpio.toLowerCase()}`;
+  }
+  return null;
+}
+
 /** true si el texto es un bytes32 en hex (0x + 64 caracteres hex). */
 export function esHashValido(hash: unknown): hash is string {
-  return typeof hash === "string" && /^0x[0-9a-fA-F]{64}$/.test(hash);
+  return normalizarHash(hash) !== null;
 }
 
 export function urlEtherscanTx(txHash: string): string {
-  return `${ETHERSCAN_BASE_URL}/tx/${txHash}`;
+  const limpio = txHash.trim();
+  const tx = limpio.startsWith("0x") ? limpio : `0x${limpio}`;
+  return `${ETHERSCAN_BASE_URL}/tx/${tx}`;
 }
 
 export function urlEtherscanContrato(direccion: string): string {
@@ -169,16 +208,16 @@ export function getDireccionContrato(): string {
 /**
  * Obtiene el proveedor de Sepolia (para lecturas públicas)
  */
-export function getSepoliaProvider() {
-  const rpcUrl = process.env.SEPOLIA_RPC_URL?.trim() || RPC_PUBLICO_RESPALDO;
+export function getSepoliaProvider(customRpc?: string) {
+  const rpcUrl = customRpc || process.env.SEPOLIA_RPC_URL?.trim() || RPC_PUBLICO_RESPALDO;
   return new ethers.JsonRpcProvider(rpcUrl, SEPOLIA_CHAIN_ID, { staticNetwork: true });
 }
 
 /**
  * Obtiene la instancia del contrato para lectura
  */
-export function getContractReadOnly() {
-  return new ethers.Contract(getDireccionContrato(), KREDIAN_ABI, getSepoliaProvider());
+export function getContractReadOnly(customRpc?: string) {
+  return new ethers.Contract(getDireccionContrato(), KREDIAN_ABI, getSepoliaProvider(customRpc));
 }
 
 /**
@@ -187,9 +226,13 @@ export function getContractReadOnly() {
  */
 export function getContractWithSigner() {
   const direccion = getDireccionContrato();
-  const privateKey = process.env.SEPOLIA_PRIVATE_KEY?.trim();
+  let privateKey = process.env.SEPOLIA_PRIVATE_KEY?.trim();
   if (!privateKey) {
-    throw new Error("SEPOLIA_PRIVATE_KEY no está configurada");
+    throw new Error("SEPOLIA_PRIVATE_KEY no está configurada en las variables de entorno");
+  }
+  privateKey = privateKey.replace(/^["']|["']$/g, "").trim();
+  if (!privateKey.startsWith("0x")) {
+    privateKey = `0x${privateKey}`;
   }
 
   const wallet = new ethers.Wallet(privateKey, getSepoliaProvider());
@@ -198,8 +241,26 @@ export function getContractWithSigner() {
 
 /** Lee en el contrato cuándo se selló un hash. Devuelve 0 si nunca se selló. */
 export async function leerSelladoEn(hash: string): Promise<number> {
-  const timestamp: bigint = await getContractReadOnly().selladoEn(hash);
-  return Number(timestamp);
+  const h = normalizarHash(hash);
+  if (!h) throw new ErrorDatosSello("hash no es un bytes32 válido");
+
+  try {
+    const timestamp: bigint = await getContractReadOnly().selladoEn(h);
+    return Number(timestamp);
+  } catch (error) {
+    // Si falla y hay un RPC personalizado, intenta con el de respaldo público
+    const customRpc = process.env.SEPOLIA_RPC_URL?.trim();
+    if (customRpc && customRpc !== RPC_PUBLICO_RESPALDO) {
+      try {
+        const fallbackContract = getContractReadOnly(RPC_PUBLICO_RESPALDO);
+        const timestamp: bigint = await fallbackContract.selladoEn(h);
+        return Number(timestamp);
+      } catch {
+        // Ignora y lanza el error original
+      }
+    }
+    throw error;
+  }
 }
 
 export interface ResultadoSello {
@@ -231,7 +292,7 @@ export async function sellarCredencial(
   entrada: unknown,
   esperaMs = 45_000,
 ): Promise<ResultadoSello> {
-  const datos = validarDatosSello(entrada);
+  const datos = validarDatosSello(entrada, true);
   const hash = calcularHashSello(datos);
   const contract = getContractWithSigner();
 

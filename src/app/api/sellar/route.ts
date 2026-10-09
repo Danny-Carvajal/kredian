@@ -40,6 +40,7 @@ export async function POST(req: NextRequest) {
       ya_existia: r.ya_existia,
       confirmado: r.confirmado,
       verificado_en: r.datos.verificado_en,
+      sellado_en: r.datos.verificado_en,
     });
   } catch (error) {
     if (error instanceof ErrorDatosSello) {

@@ -41,30 +41,28 @@ Desde una server action o ruta del servidor (no hace falta pasar por HTTP):
 ```ts
 import { sellarCredencial } from "@/lib/blockchain";
 
-const verificado_en = new Date().toISOString();
+// Si no enviás verificado_en ni sellado_en, se genera automáticamente con la fecha actual.
 const r = await sellarCredencial({
   fuente: "credly",
-  badge_id, titulo, emisor,
+  badge_id,
+  titulo,
+  emisor,
   fecha_emision,          // "YYYY-MM-DD"
   estado,                 // "vigente" | "vencida" | "revocada"
-  verificado_en,
 });
 
-// Guardar en `credenciales`:
+// Guardar en `credenciales` (de Supabase):
 //   hash       = r.hash
 //   tx_hash    = r.tx_hash
-//   sellado_en = r.datos.verificado_en   ← IMPORTANTE (ver abajo)
+//   sellado_en = r.datos.verificado_en   (o r.sellado_en)
 ```
 
 O desde el servidor/cliente con `fetch("/api/sellar", { method: "POST", body: JSON.stringify(datos) })`.
-La respuesta trae `hash`, `tx_hash`, `etherscan_url`, `verificado_en`, `sellado_en_blockchain`,
-`ya_existia` y `confirmado`. En la tabla se guarda `verificado_en` (no `sellado_en_blockchain`,
-que es solo la hora del bloque, informativa).
+La respuesta trae `hash`, `tx_hash`, `etherscan_url`, `verificado_en`, `sellado_en` (alias directo para la BD),
+`sellado_en_blockchain`, `ya_existia` y `confirmado`.
 
-> **Importante:** el hash incluye `verificado_en`. La tabla `credenciales` no tiene esa columna,
-> así que guardá ese mismo valor en `sellado_en`. Si guardás otra hora, "Comprobar sello"
-> no va a poder recalcular el hash.
-> El formato que devuelve Supabase (`+00:00`) ya se normaliza solo, no hay que tocarlo.
+> **Nota:** La API acepta indistintamente `sellado_en` o `verificado_en`. El formato que devuelve Supabase
+> (`+00:00` en timestamptz) se normaliza automáticamente sin romper el recálculo del hash.
 
 ### 2. "Comprobar sello" en `/u/[usuario]`
 
@@ -81,7 +79,7 @@ import BotonComprobarSello from "@/components/BotonComprobarSello";
     emisor: c.emisor,
     fecha_emision: c.fecha_emision,
     estado: c.estado,
-    verificado_en: c.sellado_en,
+    sellado_en: c.sellado_en, // Acepta sellado_en directo de Supabase
   }}
 />
 ```
@@ -93,7 +91,8 @@ muestra "Sello no verificado".
 ## Probar
 
 ```bash
-npm run probar:sello        # 3 sellos seguidos (gasta un poco de ETH de prueba)
+npm test                    # Tests unitarios locales (sin gastar gas)
+npm run probar:sello        # 3 sellos seguidos en Sepolia (gasta un poco de ETH de prueba)
 npm run probar:sello -- 1   # solo uno
 ```
 

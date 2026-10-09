@@ -2,10 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import {
   calcularHashSello,
   ErrorDatosSello,
-  esHashValido,
   getDireccionContrato,
   leerSelladoEn,
   mensajeDeError,
+  normalizarHash,
   urlEtherscanContrato,
   validarDatosSello,
 } from "@/lib/blockchain";
@@ -33,8 +33,9 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const hashGuardado = body.hash;
-    if (hashGuardado !== undefined && !esHashValido(hashGuardado)) {
+    const rawHash = body.hash;
+    const hashGuardado = rawHash !== undefined ? normalizarHash(rawHash) : undefined;
+    if (rawHash !== undefined && !hashGuardado) {
       return NextResponse.json(
         { error: "hash debe ser un bytes32 en hex (0x + 64 caracteres)" },
         { status: 400 },
@@ -45,7 +46,7 @@ export async function POST(req: NextRequest) {
     let hash: string;
 
     if (tieneDatos) {
-      hash = calcularHashSello(validarDatosSello(body));
+      hash = calcularHashSello(validarDatosSello(body, false));
       if (hashGuardado && hashGuardado.toLowerCase() !== hash.toLowerCase()) {
         return NextResponse.json({
           verificado: false,
