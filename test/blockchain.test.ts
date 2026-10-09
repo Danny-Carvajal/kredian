@@ -175,13 +175,19 @@ test("detecta alteracion de credenciales (recalculo genera hash distinto)", () =
   assert.notStrictEqual(hashOriginal, hashAlterado);
 });
 
-test("leerSelladoEn consulta contrato en Sepolia y confirma el sello real previamente emitido", async () => {
-  const hashPrueba = "0x11ce610691987d2c174d132b7158976f759b55138f2af36cadc15ebead163c8d";
-  const timestamp = await leerSelladoEn(hashPrueba);
-  assert.strictEqual(timestamp, 1791507720);
-});
+test(
+  "leerSelladoEn consulta contrato en Sepolia y confirma el sello real previamente emitido",
+  { skip: !process.env.KREDIAN_CONTRACT_ADDRESS },
+  async () => {
+    const hashPrueba = "0x11ce610691987d2c174d132b7158976f759b55138f2af36cadc15ebead163c8d";
+    const timestamp = await leerSelladoEn(hashPrueba);
+    assert.strictEqual(timestamp, 1791507720);
+  },
+);
 
 test("getSepoliaProvider y getContractReadOnly reutilizan instancias cacheadas", async () => {
+  process.env.KREDIAN_CONTRACT_ADDRESS ??=
+    "0x55C27efcF6d8707315f95FEaC8Ad569488fEe75E";
   const { getSepoliaProvider, getContractReadOnly } = await import("../src/lib/blockchain");
   const p1 = getSepoliaProvider();
   const p2 = getSepoliaProvider();
