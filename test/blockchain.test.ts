@@ -180,3 +180,26 @@ test("leerSelladoEn consulta contrato en Sepolia y confirma el sello real previa
   const timestamp = await leerSelladoEn(hashPrueba);
   assert.strictEqual(timestamp, 1791507720);
 });
+
+test("getSepoliaProvider y getContractReadOnly reutilizan instancias cacheadas", async () => {
+  const { getSepoliaProvider, getContractReadOnly } = await import("../src/lib/blockchain");
+  const p1 = getSepoliaProvider();
+  const p2 = getSepoliaProvider();
+  assert.strictEqual(p1, p2);
+
+  const c1 = getContractReadOnly();
+  const c2 = getContractReadOnly();
+  assert.strictEqual(c1, c2);
+});
+
+test("urlEtherscanTx normaliza prefijo 0x", async () => {
+  const { urlEtherscanTx, urlEtherscanContrato } = await import("../src/lib/blockchain");
+  assert.strictEqual(
+    urlEtherscanTx("448ed6f933ddf1f047c3a93455d872307ec5bc8664576386568f5aa92589db2d"),
+    "https://sepolia.etherscan.io/tx/0x448ed6f933ddf1f047c3a93455d872307ec5bc8664576386568f5aa92589db2d",
+  );
+  assert.strictEqual(
+    urlEtherscanContrato("0x55C27efcF6d8707315f95FEaC8Ad569488fEe75E"),
+    "https://sepolia.etherscan.io/address/0x55C27efcF6d8707315f95FEaC8Ad569488fEe75E",
+  );
+});

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 const ETHERSCAN_BASE_URL = "https://sepolia.etherscan.io";
 
@@ -35,9 +35,13 @@ interface Resultado {
 }
 
 function formatearFecha(iso: string): string {
-  return new Intl.DateTimeFormat("es-CR", { dateStyle: "long", timeStyle: "short" }).format(
-    new Date(iso),
-  );
+  try {
+    const d = new Date(iso);
+    if (Number.isNaN(d.getTime())) return iso;
+    return new Intl.DateTimeFormat("es-CR", { dateStyle: "long", timeStyle: "short" }).format(d);
+  } catch {
+    return iso;
+  }
 }
 
 /**
@@ -47,17 +51,33 @@ function formatearFecha(iso: string): string {
 export default function BotonComprobarSello({ hash, txHash, datosCredencial }: PropsComprobarSello) {
   const [cargando, setCargando] = useState(false);
   const [resultado, setResultado] = useState<Resultado | null>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
+
+  // Limpiar peticiones pendientes al desmontar el componente
+  useEffect(() => {
+    return () => {
+      abortControllerRef.current?.abort();
+    };
+  }, []);
 
   const sinDatos = !hash && !datosCredencial;
 
-  const comprobar = async () => {
+  const comprobar = useCallback(async () => {
+    if (sinDatos) return;
+
+    abortControllerRef.current?.abort();
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
+
     setCargando(true);
     setResultado(null);
+
     try {
       const res = await fetch("/api/comprobar", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...(datosCredencial ?? {}), ...(hash ? { hash } : {}) }),
+        signal: controller.signal,
       });
 
       const data = await res.json().catch(() => ({}));
@@ -74,18 +94,21 @@ export default function BotonComprobarSello({ hash, txHash, datosCredencial }: P
           etherscanUrl: data.etherscan_contract_url,
         });
       }
-    } catch {
-      setResultado({
-        verificado: false,
-        mensaje: "Error de red al comprobar el sello. Revisá tu conexión.",
-      });
+    } catch (err: unknown) {
+      if ((err as { name?: string })?.name !== "AbortError") {
+        setResultado({
+          verificado: false,
+          mensaje: "Error de red al comprobar el sello. Revisá tu conexión.",
+        });
+      }
     } finally {
       setCargando(false);
     }
-  };
+  }, [datosCredencial, hash, sinDatos]);
 
-  const linkEtherscan = txHash
-    ? `${ETHERSCAN_BASE_URL}/tx/${txHash.trim().startsWith("0x") ? txHash.trim() : `0x${txHash.trim()}`}`
+  const cleanTxHash = txHash?.trim();
+  const linkEtherscan = cleanTxHash
+    ? `${ETHERSCAN_BASE_URL}/tx/${cleanTxHash.startsWith("0x") ? cleanTxHash : `0x${cleanTxHash}`}`
     : resultado?.etherscanUrl;
 
   return (

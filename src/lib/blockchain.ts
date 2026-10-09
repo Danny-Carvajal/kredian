@@ -8,6 +8,11 @@ export const ETHERSCAN_BASE_URL = "https://sepolia.etherscan.io";
 // RPC público de respaldo (solo lectura). Para producción usar Alchemy/Infura en SEPOLIA_RPC_URL.
 const RPC_PUBLICO_RESPALDO = "https://ethereum-sepolia-rpc.publicnode.com";
 
+// Expresiones regulares precompiladas para evitar reasignación continua
+const DATE_FORMAT_REGEX = /^\d{4}-\d{2}-\d{2}$/;
+const HASH_0X_REGEX = /^0x[0-9a-fA-F]{64}$/;
+const HASH_NO_0X_REGEX = /^[0-9a-fA-F]{64}$/;
+
 // ABI mínimo del contrato KredianSellos (sección 7 de PROYECTO.md)
 export const KREDIAN_ABI = [
   "function sellar(bytes32 hash) external",
@@ -47,7 +52,7 @@ const CLAVES_REQUERIDAS = [
  */
 export function normalizarFechaEmision(valor: string): string {
   const fecha = valor.trim().slice(0, 10);
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(fecha) || Number.isNaN(Date.parse(fecha))) {
+  if (!DATE_FORMAT_REGEX.test(fecha) || Number.isNaN(Date.parse(fecha))) {
     throw new ErrorDatosSello("fecha_emision debe tener formato YYYY-MM-DD");
   }
   return fecha;
@@ -169,10 +174,10 @@ export function calcularHashSello(datos: DatosCredencialParaSello): string {
 export function normalizarHash(hash: unknown): string | null {
   if (typeof hash !== "string") return null;
   const limpio = hash.trim();
-  if (/^0x[0-9a-fA-F]{64}$/.test(limpio)) {
+  if (HASH_0X_REGEX.test(limpio)) {
     return limpio.toLowerCase();
   }
-  if (/^[0-9a-fA-F]{64}$/.test(limpio)) {
+  if (HASH_NO_0X_REGEX.test(limpio)) {
     return `0x${limpio.toLowerCase()}`;
   }
   return null;
@@ -205,26 +210,43 @@ export function getDireccionContrato(): string {
   return direccion;
 }
 
+// Caches en memoria para reutilizar conexiones y evitar overhead en cada llamada
+const providerCache = new Map<string, ethers.JsonRpcProvider>();
+const contractReadOnlyCache = new Map<string, ethers.Contract>();
+
 /**
- * Obtiene el proveedor de Sepolia (para lecturas públicas)
+ * Obtiene el proveedor de Sepolia (con caché de instancia para reutilizar conexión)
  */
-export function getSepoliaProvider(customRpc?: string) {
+export function getSepoliaProvider(customRpc?: string): ethers.JsonRpcProvider {
   const rpcUrl = customRpc || process.env.SEPOLIA_RPC_URL?.trim() || RPC_PUBLICO_RESPALDO;
-  return new ethers.JsonRpcProvider(rpcUrl, SEPOLIA_CHAIN_ID, { staticNetwork: true });
+  let provider = providerCache.get(rpcUrl);
+  if (!provider) {
+    provider = new ethers.JsonRpcProvider(rpcUrl, SEPOLIA_CHAIN_ID, { staticNetwork: true });
+    providerCache.set(rpcUrl, provider);
+  }
+  return provider;
 }
 
 /**
- * Obtiene la instancia del contrato para lectura
+ * Obtiene la instancia del contrato para lectura (con caché de instancia)
  */
-export function getContractReadOnly(customRpc?: string) {
-  return new ethers.Contract(getDireccionContrato(), KREDIAN_ABI, getSepoliaProvider(customRpc));
+export function getContractReadOnly(customRpc?: string): ethers.Contract {
+  const direccion = getDireccionContrato();
+  const rpcUrl = customRpc || process.env.SEPOLIA_RPC_URL?.trim() || RPC_PUBLICO_RESPALDO;
+  const cacheKey = `${direccion}:${rpcUrl}`;
+  let contract = contractReadOnlyCache.get(cacheKey);
+  if (!contract) {
+    contract = new ethers.Contract(direccion, KREDIAN_ABI, getSepoliaProvider(customRpc));
+    contractReadOnlyCache.set(cacheKey, contract);
+  }
+  return contract;
 }
 
 /**
  * Obtiene la instancia del contrato con firma de billetera (SOLO en el servidor).
  * Nunca importar esto desde un componente "use client".
  */
-export function getContractWithSigner() {
+export function getContractWithSigner(): ethers.Contract {
   const direccion = getDireccionContrato();
   let privateKey = process.env.SEPOLIA_PRIVATE_KEY?.trim();
   if (!privateKey) {
@@ -294,10 +316,9 @@ export async function sellarCredencial(
 ): Promise<ResultadoSello> {
   const datos = validarDatosSello(entrada, true);
   const hash = calcularHashSello(datos);
-  const contract = getContractWithSigner();
 
   // Si ya estaba sellado, no gastamos gas ni provocamos un revert.
-  const previo = Number(await contract.selladoEn(hash));
+  const previo = await leerSelladoEn(hash);
   if (previo > 0) {
     return {
       hash,
@@ -311,6 +332,7 @@ export async function sellarCredencial(
     };
   }
 
+  const contract = getContractWithSigner();
   let tx: ethers.ContractTransactionResponse;
   try {
     tx = await contract.sellar(hash);
@@ -337,7 +359,17 @@ export async function sellarCredencial(
     if (!receipt || receipt.status !== 1) {
       throw new Error("La transacción de sellado falló en Sepolia");
     }
-    const bloque = await receipt.getBlock();
+
+    let selladoEnBlockchain: string | null = null;
+    try {
+      const bloque = await receipt.getBlock();
+      if (bloque) {
+        selladoEnBlockchain = new Date(bloque.timestamp * 1000).toISOString();
+      }
+    } catch {
+      selladoEnBlockchain = new Date().toISOString();
+    }
+
     return {
       hash,
       datos,
@@ -345,7 +377,7 @@ export async function sellarCredencial(
       confirmado: true,
       tx_hash: receipt.hash,
       block_number: receipt.blockNumber,
-      sellado_en_blockchain: new Date(bloque.timestamp * 1000).toISOString(),
+      sellado_en_blockchain: selladoEnBlockchain,
       etherscan_url: urlEtherscanTx(receipt.hash),
     };
   } catch (error) {
