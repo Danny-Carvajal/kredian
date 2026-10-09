@@ -1,0 +1,12 @@
+---
+description: Kredian — modo solo, leer PROYECTO.md y construir el MVP
+alwaysApply: true
+---
+
+Antes de escribir código, leé `PROYECTO.md` completo. Es la única fuente de verdad.
+
+**Modo solo (8 oct):** Danny + Cursor entregan el MVP. No esperes código de José, Juliana ni Daniel. No preguntes por ellos para poder avanzar. Seguí la sección 9 (plan solo) y la sección 15 (Modo solo).
+
+Orden: login + tablas → flujo Credly/validar/sellar/perfil público → pulido → video. No inventes emisores, CSV, Resend, Apple, ni otras fuentes. No cambies el contrato ni el orden de claves del hash (sección 7). No commitees `.env.local`.
+
+Stack: Next.js App Router + TypeScript + Tailwind + Supabase + ethers.js v6. UI en español.

@@ -15,35 +15,26 @@ La fuente de verdad del proyecto es [`PROYECTO.md`](./PROYECTO.md). Leelo antes 
 
 En Git Bash usá `/` en las rutas, no `\`. Corré **un comando por línea**.
 
-Si ya clonaste el repo:
-
 ```bash
 cd /c/Users/Danny/code/kredian
 git fetch origin
-git checkout cursor/nextjs-scaffold-42fc
+git checkout cursor/login-supabase-42fc
 npm install
 cp .env.example .env.local
 npm run dev
 ```
-
-Si todavía no lo clonaste:
-
-```bash
-mkdir -p /c/Users/Danny/code
-git clone https://github.com/Danny-Carvajal/kredian.git /c/Users/Danny/code/kredian
-cd /c/Users/Danny/code/kredian
-git checkout cursor/nextjs-scaffold-42fc
-npm install
-cp .env.example .env.local
-npm run dev
-```
-
-El resto del equipo clona en su propia carpeta (el último argumento de `git clone` es la ruta destino).
 
 Abrí [http://localhost:3000](http://localhost:3000).
 
-Las llaves van en `.env.local` (nunca al repo). Copiá `.env.example` y completá los valores cuando el equipo las tenga.
+## Supabase (login de hoy)
 
-## Ramas
+1. [supabase.com](https://supabase.com) → New project `kredian`.
+2. Settings → API: copiá Project URL y `anon` `public` a `.env.local`:
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+3. Authentication → Providers → Email: para el MVP, desactivá **Confirm email**.
+4. Authentication → URL configuration: Site URL `http://localhost:3000`.
+5. SQL Editor: abrí `supabase/schema.sql`, pegá todo, Run.
+6. Reiniciá `npm run dev` y creá una cuenta en `/login`.
 
-Nadie trabaja en `main`. Cada persona usa su rama (`jose/...`, `juliana/...`, `daniel/...`, `danny/...`). Solo Danny junta ramas en `main` con Pull Request.
+Las llaves nunca van al repo.
