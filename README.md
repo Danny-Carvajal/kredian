@@ -38,3 +38,15 @@ Abrí [http://localhost:3000](http://localhost:3000).
 6. Reiniciá `npm run dev` y creá una cuenta en `/login`.
 
 Las llaves nunca van al repo.
+
+## Sello en Sepolia
+
+En el mismo `.env.local`, sin pegar llaves reales en el repo:
+
+```
+SEPOLIA_RPC_URL=
+SEPOLIA_PRIVATE_KEY=
+KREDIAN_CONTRACT_ADDRESS=0x55C27efcF6d8707315f95FEaC8Ad569488fEe75E
+```
+
+`SEPOLIA_RPC_URL` es la URL de Sepolia en Alchemy o Infura. `SEPOLIA_PRIVATE_KEY` es la de una wallet nueva, solo con ETH de prueba. La dirección del contrato ya está desplegada: no la cambies. Sin esas tres, `/api/sellar` no puede firmar. El detalle está en [`contracts/README.md`](./contracts/README.md).
