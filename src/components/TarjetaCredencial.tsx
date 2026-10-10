@@ -101,6 +101,7 @@ export function TarjetaCredencial({
             <button
               type="button"
               disabled
+              title={ejemplo ? "Ejemplo visual" : undefined}
               className="inline-flex h-9 cursor-default items-center rounded-full bg-ink px-4 text-sm font-semibold text-white disabled:opacity-100"
             >
               Comprobar sello

@@ -32,7 +32,7 @@ function Medalla({
 const TAMANOS = {
   sm: { medalla: 28, texto: "text-xs" },
   md: { medalla: 36, texto: "text-sm" },
-  lg: { medalla: 56, texto: "text-base" },
+  lg: { medalla: 72, texto: "text-base" },
 } as const;
 
 export function InsigniaRango({
