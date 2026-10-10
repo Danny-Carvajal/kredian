@@ -27,7 +27,8 @@ Las mismas tres van en Vercel → Settings → Environment Variables.
 | Archivo | Qué hace |
 |---|---|
 | `src/lib/blockchain.ts` | Hash canónico, validación, conexión al contrato y `sellarCredencial()` |
-| `src/app/api/sellar/route.ts` | `POST /api/sellar` — firma en el servidor y sella |
+| `src/lib/sellar-solicitud.ts` | Sesión, dueño de la credencial y guardado de `hash` / `tx_hash` / `sellado_en` |
+| `src/app/api/sellar/route.ts` | `POST /api/sellar` — exige sesión, sella la fila y guarda el resultado |
 | `src/app/api/comprobar/route.ts` | `POST /api/comprobar` — recalcula el hash y lo busca en el contrato |
 | `src/components/BotonComprobarSello.tsx` | Botón "Comprobar sello" + link a Etherscan |
 | `scripts/probar-sello.ts` | `npm run probar:sello` — 3 sellos seguidos de prueba |
@@ -36,33 +37,25 @@ Las mismas tres van en Vercel → Settings → Environment Variables.
 
 ### 1. Sellar, después de validar Credly + nombre
 
-Desde una server action o ruta del servidor (no hace falta pasar por HTTP):
+La fila ya tiene que estar en `credenciales` y ser del usuario logueado.
+`POST /api/sellar` exige la cookie de sesión y **solo** acepta:
 
-```ts
-import { sellarCredencial } from "@/lib/blockchain";
-
-// Si no enviás verificado_en ni sellado_en, se genera automáticamente con la fecha actual.
-const r = await sellarCredencial({
-  fuente: "credly",
-  badge_id,
-  titulo,
-  emisor,
-  fecha_emision,          // "YYYY-MM-DD"
-  estado,                 // "vigente" | "vencida" | "revocada"
-});
-
-// Guardar en `credenciales` (de Supabase):
-//   hash       = r.hash
-//   tx_hash    = r.tx_hash
-//   sellado_en = r.datos.verificado_en   (o r.sellado_en)
+```json
+{ "credencial_id": "uuid-de-la-fila" }
 ```
 
-O desde el servidor/cliente con `fetch("/api/sellar", { method: "POST", body: JSON.stringify(datos) })`.
-La respuesta trae `hash`, `tx_hash`, `etherscan_url`, `verificado_en`, `sellado_en` (alias directo para la BD),
-`sellado_en_blockchain`, `ya_existia` y `confirmado`.
+Lee `fuente`, `badge_id`, `titulo`, `emisor`, `fecha_emision` y `estado` de esa fila.
+No armes el hash con lo que manda el navegador.
 
-> **Nota:** La API acepta indistintamente `sellado_en` o `verificado_en`. El formato que devuelve Supabase
-> (`+00:00` en timestamptz) se normaliza automáticamente sin romper el recálculo del hash.
+La misma ruta guarda en la fila:
+
+- `hash`
+- `tx_hash`
+- `sellado_en` = el `verificado_en` exacto que entró al hash (sección 7). No es el timestamp del bloque. `/api/comprobar` recalcula el sha256 con esta columna.
+
+`sellarCredencial()` queda para scripts del servidor (`npm run probar:sello`). La firma sigue solo en el servidor.
+
+> El `timestamptz` de Supabase vuelve como `+00:00`. Al leer `sellado_en` se normaliza a ISO UTC; por eso el hash recalculado sigue coincidiendo.
 
 ### 2. "Comprobar sello" en `/u/[usuario]`
 
@@ -98,7 +91,5 @@ npm run probar:sello -- 1   # solo uno
 
 ## Límites conocidos (para el video, con honestidad)
 
-- `/api/sellar` es pública y la wallet paga el gas: alguien podría gastar el ETH de prueba.
-  Cuando exista el login, conviene llamar a `sellarCredencial()` solo desde el servidor
-  con un usuario logueado.
+- `/api/sellar` exige sesión y que la credencial sea del usuario. La wallet del servidor igual paga el gas de Sepolia; por eso no acepta datos sueltos del navegador.
 - Es Sepolia (red de pruebas), no dinero real.
