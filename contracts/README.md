@@ -11,16 +11,24 @@ Todo lo de blockchain de Kredian según la sección 7 de [`PROYECTO.md`](../PROY
 | Código | [`KredianSellos.sol`](./KredianSellos.sol) (idéntico al de la sección 7, sin cambios) |
 | Primer sello de prueba | [`0x1578b57d…a9ee`](https://sepolia.etherscan.io/tx/0x1578b57d7e3dbcd994030912bf798590fdd37baf7d6409f841bcfd264327a9ee) |
 | 3 sellos seguidos sin fallos (8 oct) | [`0x448ed6f9…`](https://sepolia.etherscan.io/tx/0x448ed6f933ddf1f047c3a93455d872307ec5bc8664576386568f5aa92589db2d) · [`0x9baf97f0…`](https://sepolia.etherscan.io/tx/0x9baf97f0af6c8ae6a03d8529a69a23463ce2e5f1861606253ae5546a73419772) · [`0x06c0b7e8…`](https://sepolia.etherscan.io/tx/0x06c0b7e8e08f3d9a5bd09837309db94a4f700cbd35a4093e4bfd5a1b60d4aebd) |
+| 3 sellos seguidos, contrato verificado (10 oct) | [`0x0d0124f3…`](https://sepolia.etherscan.io/tx/0x0d0124f3bed5a03ea655d5e67d0d86db6b466d2bd25403331c40bf4a42e69a1d) · [`0x91ca2b27…`](https://sepolia.etherscan.io/tx/0x91ca2b271784589ebfc80917273c159f7f802ec759558184b11ba8f4a4e9e059) · [`0x85f39a1f…`](https://sepolia.etherscan.io/tx/0x85f39a1fb014378fddbee49aa0f9ee1f4fb13fbd85582c410774d60942bca067) |
 
-## Variables en `.env.local` (nunca al repo)
+## Cómo configurar `.env.local` para el sello
+
+No subas este archivo ni pegues llaves reales en el repo ni en el chat. Si no existe, copiá `.env.example`.
+
+1. Wallet nueva en MetaMask, solo para Kredian, con ETH de prueba de Sepolia.
+2. En Alchemy o Infura, copiá la URL RPC de Sepolia.
+3. Exportá la llave privada de esa wallet (sirve con o sin `0x`).
+4. Dejá la dirección del contrato tal cual. Ya está desplegado.
 
 ```
-SEPOLIA_RPC_URL=            # Alchemy o Infura (Sepolia)
-SEPOLIA_PRIVATE_KEY=        # wallet SOLO de pruebas
+SEPOLIA_RPC_URL=
+SEPOLIA_PRIVATE_KEY=
 KREDIAN_CONTRACT_ADDRESS=0x55C27efcF6d8707315f95FEaC8Ad569488fEe75E
 ```
 
-Las mismas tres van en Vercel → Settings → Environment Variables.
+Sin `SEPOLIA_RPC_URL` y `SEPOLIA_PRIVATE_KEY`, `/api/sellar` no puede firmar. `/api/comprobar` necesita la dirección del contrato; si no hay RPC, usa un nodo público de respaldo. Las mismas tres variables van en Vercel → Settings → Environment Variables.
 
 ## Archivos
 
@@ -31,6 +39,8 @@ Las mismas tres van en Vercel → Settings → Environment Variables.
 | `src/app/api/sellar/route.ts` | `POST /api/sellar` — exige sesión, sella la fila y guarda el resultado |
 | `src/app/api/comprobar/route.ts` | `POST /api/comprobar` — recalcula el hash y lo busca en el contrato |
 | `src/components/BotonComprobarSello.tsx` | Botón "Comprobar sello" + link a Etherscan |
+| `src/components/BotonSellar.tsx` | En `/perfil`, `POST /api/sellar` con `credencial_id` |
+| `src/app/u/[usuario]/page.tsx` | Perfil público, sin login, con el botón de comprobar |
 | `scripts/probar-sello.ts` | `npm run probar:sello` — 3 sellos seguidos de prueba |
 
 ## Cómo integrarlo (Danny)

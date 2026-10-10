@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { cerrarSesion } from "@/app/login/actions";
+import ListaCredencialesPerfil from "@/components/ListaCredencialesPerfil";
+import { mapearCredencial, type CredencialVisible } from "@/lib/credencial-publica";
 import { asegurarPerfil } from "@/lib/profiles";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { createClient } from "@/lib/supabase/server";
@@ -47,6 +49,17 @@ export default async function PerfilPage({ searchParams }: Props) {
 
   const perfil = await asegurarPerfil(supabase, user);
   const error = textoError(params.error);
+
+  const { data: filasCredenciales, error: errorCredenciales } = await supabase
+    .from("credenciales")
+    .select(
+      "id, fuente, badge_id, titulo, emisor, fecha_emision, estado, hash, tx_hash, sellado_en, rango",
+    )
+    .eq("user_id", user.id);
+
+  const credenciales = (filasCredenciales ?? [])
+    .map((fila) => mapearCredencial(fila))
+    .filter((credencial): credencial is CredencialVisible => credencial !== null);
 
   return (
     <div className="mx-auto flex w-full max-w-xl flex-1 flex-col gap-8 px-6 py-16">
@@ -128,6 +141,12 @@ export default async function PerfilPage({ searchParams }: Props) {
           sellar. Hoy solo el perfil.
         </p>
       </section>
+
+      <ListaCredencialesPerfil
+        usuario={perfil.usuario}
+        credenciales={credenciales}
+        error={errorCredenciales ? "No se pudieron leer tus credenciales." : null}
+      />
     </div>
   );
 }
