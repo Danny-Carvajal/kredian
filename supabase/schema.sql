@@ -97,3 +97,31 @@ create policy "rangos_write_authenticated"
   on public.rangos for all
   using (auth.uid() is not null)
   with check (auth.uid() is not null);
+
+-- Semilla de rangos (~20). Se puede correr más de una vez.
+insert into public.rangos (patron, area, subarea, rango, peso)
+select * from (values
+  ('introduction to cloud 101', 'cloud', 'aws', 'bronce', 1),
+  ('cloud practitioner', 'cloud', 'aws', 'plata', 2),
+  ('solutions architect associate', 'cloud', 'aws', 'oro', 3),
+  ('solutions architect professional', 'cloud', 'aws', 'platino', 4),
+  ('developer associate', 'cloud', 'aws', 'oro', 3),
+  ('sysops administrator', 'cloud', 'aws', 'oro', 3),
+  ('google cloud digital leader', 'cloud', 'gcp', 'plata', 2),
+  ('associate cloud engineer', 'cloud', 'gcp', 'oro', 3),
+  ('azure fundamentals', 'cloud', 'azure', 'plata', 2),
+  ('azure administrator', 'cloud', 'azure', 'oro', 3),
+  ('introduction to cybersecurity', 'seguridad', 'cisco', 'bronce', 1),
+  ('cybersecurity essentials', 'seguridad', 'cisco', 'plata', 2),
+  ('ccna', 'redes', 'cisco', 'oro', 3),
+  ('security+', 'seguridad', 'comptia', 'oro', 3),
+  ('network+', 'redes', 'comptia', 'plata', 2),
+  ('linux+', 'sistemas', 'comptia', 'plata', 2),
+  ('kubernetes', 'devops', 'cncf', 'oro', 3),
+  ('cka', 'devops', 'cncf', 'platino', 4),
+  ('terraform associate', 'devops', 'hashicorp', 'oro', 3),
+  ('ibm skillsbuild', 'fundamentos', 'ibm', 'bronce', 1)
+) as v(patron, area, subarea, rango, peso)
+where not exists (
+  select 1 from public.rangos r where r.patron = v.patron
+);

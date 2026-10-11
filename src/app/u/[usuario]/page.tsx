@@ -24,8 +24,8 @@ export default async function PerfilPublicoPage({ params }: Props) {
   if (!isSupabaseConfigured()) {
     return (
       <div className="mx-auto flex w-full max-w-xl flex-1 flex-col gap-4 px-6 py-16">
-        <h1 className="text-3xl font-semibold">Perfil</h1>
-        <p className="text-zinc-600 dark:text-zinc-400">
+        <h1 className="text-3xl font-semibold text-ink">Perfil</h1>
+        <p className="text-muted">
           Configurá Supabase en `.env.local` y corré `supabase/schema.sql` para
           ver perfiles públicos.
         </p>
@@ -43,8 +43,8 @@ export default async function PerfilPublicoPage({ params }: Props) {
   if (error) {
     return (
       <div className="mx-auto flex w-full max-w-xl flex-1 flex-col gap-4 px-6 py-16">
-        <h1 className="text-3xl font-semibold">Perfil</h1>
-        <p className="text-zinc-600 dark:text-zinc-400">No se pudo leer el perfil.</p>
+        <h1 className="text-3xl font-semibold text-ink">Perfil</h1>
+        <p className="text-muted">No se pudo leer el perfil.</p>
       </div>
     );
   }
@@ -62,8 +62,8 @@ export default async function PerfilPublicoPage({ params }: Props) {
   if (errorCredenciales) {
     return (
       <div className="mx-auto flex w-full max-w-xl flex-1 flex-col gap-4 px-6 py-16">
-        <h1 className="text-3xl font-semibold">{fila.nombre || fila.usuario}</h1>
-        <p className="text-zinc-600 dark:text-zinc-400">No se pudieron leer las credenciales.</p>
+        <h1 className="text-3xl font-semibold text-ink">{fila.nombre || fila.usuario}</h1>
+        <p className="text-muted">No se pudieron leer las credenciales.</p>
       </div>
     );
   }

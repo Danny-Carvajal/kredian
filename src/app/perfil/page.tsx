@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { cerrarSesion } from "@/app/login/actions";
+import { Aviso } from "@/components/Aviso";
 import ListaCredencialesPerfil from "@/components/ListaCredencialesPerfil";
 import { mapearCredencial, type CredencialVisible } from "@/lib/credencial-publica";
 import { asegurarPerfil } from "@/lib/profiles";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { createClient } from "@/lib/supabase/server";
-import { guardarPerfil } from "./actions";
+import { guardarPerfil, pegarCredly } from "./actions";
 
 type Props = {
   searchParams: Promise<{ error?: string; ok?: string }>;
@@ -17,8 +18,26 @@ function textoError(codigo: string | undefined) {
   if (codigo === "config") return "Faltan las keys de Supabase.";
   if (codigo === "usuario") return "El usuario de la URL no puede estar vacío.";
   if (codigo === "tomado") return "Ese usuario ya está en uso. Probá otro.";
+  if (codigo === "link") return "Pegá el link público de la insignia de Credly.";
+  if (codigo === "nombre") {
+    return "La insignia se guardó, pero el nombre no coincide con tu perfil. Completá tu nombre real (sin apodos) y volvé a pegar el link. No se puede sellar hasta que coincida.";
+  }
   return codigo;
 }
+
+function textoOk(codigo: string | undefined) {
+  if (codigo === "1") return "Perfil guardado.";
+  if (codigo === "credly") {
+    return "Insignia leída y nombre coincide. Dale a Sellar para mandar el hash a Sepolia.";
+  }
+  if (codigo === "planb") {
+    return "Credly no se pudo leer desde el servidor, así que usamos el JSON de ejemplo (plan B). Si el nombre de tu perfil es «Danny Carvajal», coincide. Después dale a Sellar.";
+  }
+  return null;
+}
+
+const CAMPO =
+  "h-11 rounded-xl border border-line bg-surface px-3 text-base text-foreground outline-none focus:border-ink focus:ring-2 focus:ring-ink/20";
 
 export default async function PerfilPage({ searchParams }: Props) {
   const params = await searchParams;
@@ -26,12 +45,12 @@ export default async function PerfilPage({ searchParams }: Props) {
   if (!isSupabaseConfigured()) {
     return (
       <div className="mx-auto flex w-full max-w-xl flex-1 flex-col gap-4 px-6 py-16">
-        <h1 className="text-3xl font-semibold">Tu perfil</h1>
-        <p className="text-zinc-600 dark:text-zinc-400">
+        <h1 className="text-3xl font-semibold tracking-tight text-ink">Tu perfil</h1>
+        <Aviso tono="aviso">
           Configurá Supabase en `.env.local` y corré `supabase/schema.sql` para
           poder editar el perfil.
-        </p>
-        <Link href="/login" className="underline">
+        </Aviso>
+        <Link href="/login" className="text-sm font-medium text-ink underline underline-offset-4">
           Ir a entrar
         </Link>
       </div>
@@ -49,11 +68,12 @@ export default async function PerfilPage({ searchParams }: Props) {
 
   const perfil = await asegurarPerfil(supabase, user);
   const error = textoError(params.error);
+  const ok = textoOk(params.ok);
 
   const { data: filasCredenciales, error: errorCredenciales } = await supabase
     .from("credenciales")
     .select(
-      "id, fuente, badge_id, titulo, emisor, fecha_emision, estado, hash, tx_hash, sellado_en, rango",
+      "id, fuente, badge_id, titulo, emisor, fecha_emision, estado, hash, tx_hash, sellado_en, rango, nombre_coincide",
     )
     .eq("user_id", user.id);
 
@@ -62,85 +82,83 @@ export default async function PerfilPage({ searchParams }: Props) {
     .filter((credencial): credencial is CredencialVisible => credencial !== null);
 
   return (
-    <div className="mx-auto flex w-full max-w-xl flex-1 flex-col gap-8 px-6 py-16">
+    <div className="mx-auto flex w-full max-w-xl flex-1 flex-col gap-8 px-6 py-12">
       <header className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-semibold tracking-tight">Tu perfil</h1>
-          <p className="mt-2 text-zinc-600 dark:text-zinc-400">
+          <h1 className="text-3xl font-semibold tracking-tight text-ink">Tu perfil</h1>
+          <p className="mt-2 text-muted">
             Este nombre se va a comparar con el de la insignia de Credly.
           </p>
         </div>
         <form action={cerrarSesion}>
-          <button type="submit" className="text-sm underline">
+          <button type="submit" className="text-sm font-medium text-ink underline underline-offset-4">
             Salir
           </button>
         </form>
       </header>
 
-      {error ? (
-        <p className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
-          {error}
-        </p>
-      ) : null}
+      {error ? <Aviso tono="error">{error}</Aviso> : null}
+      {ok ? <Aviso tono="ok">{ok}</Aviso> : null}
 
-      {params.ok === "1" ? (
-        <p className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-900">
-          Perfil guardado.
-        </p>
-      ) : null}
-
-      <form action={guardarPerfil} className="flex flex-col gap-4">
-        <label className="flex flex-col gap-1 text-sm">
+      <form action={guardarPerfil} className="flex flex-col gap-4 rounded-3xl border border-line bg-surface p-5 shadow-sm">
+        <label className="flex flex-col gap-1.5 text-sm font-medium text-ink">
           Nombre
-          <input
-            name="nombre"
-            defaultValue={perfil.nombre ?? ""}
-            className="h-11 rounded-xl border border-zinc-300 bg-white px-3 text-base text-zinc-900 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-50"
-          />
+          <input name="nombre" defaultValue={perfil.nombre ?? ""} className={CAMPO} />
         </label>
-        <label className="flex flex-col gap-1 text-sm">
+        <label className="flex flex-col gap-1.5 text-sm font-medium text-ink">
           Usuario (va en /u/tu-usuario)
-          <input
-            name="usuario"
-            required
-            defaultValue={perfil.usuario}
-            className="h-11 rounded-xl border border-zinc-300 bg-white px-3 text-base text-zinc-900 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-50"
-          />
+          <input name="usuario" required defaultValue={perfil.usuario} className={CAMPO} />
         </label>
-        <label className="flex flex-col gap-1 text-sm">
+        <label className="flex flex-col gap-1.5 text-sm font-medium text-ink">
           Foto (URL)
           <input
             name="foto_url"
             type="url"
             defaultValue={perfil.foto_url ?? ""}
             placeholder="https://..."
-            className="h-11 rounded-xl border border-zinc-300 bg-white px-3 text-base text-zinc-900 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-50"
+            className={CAMPO}
           />
         </label>
-        <label className="flex flex-col gap-1 text-sm">
+        <label className="flex flex-col gap-1.5 text-sm font-medium text-ink">
           Descripción
           <textarea
             name="descripcion"
             rows={4}
             defaultValue={perfil.descripcion ?? ""}
-            className="rounded-xl border border-zinc-300 bg-white px-3 py-2 text-base text-zinc-900 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-50"
+            className="rounded-xl border border-line bg-surface px-3 py-2 text-base text-foreground outline-none focus:border-ink focus:ring-2 focus:ring-ink/20"
           />
         </label>
         <button
           type="submit"
-          className="h-12 rounded-full bg-foreground text-base font-medium text-background"
+          className="h-12 rounded-full bg-ink text-base font-medium text-white transition-opacity hover:opacity-90"
         >
           Guardar
         </button>
       </form>
 
-      <section className="rounded-2xl border border-dashed border-zinc-300 px-4 py-6 dark:border-zinc-700">
-        <h2 className="font-medium">Pegar link de Credly</h2>
-        <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-          Mañana: acá va el campo para leer la insignia, validar el nombre y
-          sellar. Hoy solo el perfil.
+      <form action={pegarCredly} className="rounded-2xl border border-dashed border-line bg-surface px-4 py-6">
+        <h2 className="font-medium text-ink">Pegar link de Credly</h2>
+        <p className="mt-2 text-sm leading-6 text-muted">
+          El link tiene que ser el público de la insignia (credly.com/badges/…).
+          Si Credly no deja leer, usamos el JSON de ejemplo.
         </p>
-      </section>
+        <label className="mt-4 flex flex-col gap-1.5 text-sm font-medium text-ink">
+          Link
+          <input
+            name="credly_url"
+            type="url"
+            required
+            placeholder="https://www.credly.com/badges/…/public_url"
+            className={CAMPO}
+          />
+        </label>
+        <button
+          type="submit"
+          className="mt-4 h-12 w-full rounded-full bg-ink text-base font-medium text-white transition-opacity hover:opacity-90"
+        >
+          Leer insignia
+        </button>
+      </form>
 
       <ListaCredencialesPerfil
         usuario={perfil.usuario}

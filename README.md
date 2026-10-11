@@ -11,42 +11,34 @@ La fuente de verdad del proyecto es [`PROYECTO.md`](./PROYECTO.md). Leelo antes 
 - Supabase (login y base de datos)
 - Sepolia + ethers.js v6 (sello)
 
-## Cómo correrlo en local (Git Bash)
+## Cómo correrlo (Git Bash)
 
-En Git Bash usá `/` en las rutas, no `\`. Corré **un comando por línea**.
+En Git Bash usá `/` en las rutas, no `\`. Un comando por línea.
 
 ```bash
 cd /c/Users/Danny/code/kredian
-git fetch origin
-git checkout cursor/login-supabase-42fc
+git checkout main
+git pull origin main
 npm install
 cp .env.example .env.local
 npm run dev
 ```
 
-Abrí [http://localhost:3000](http://localhost:3000).
+http://localhost:3000
 
-## Supabase (login de hoy)
+## Lo que tenés que hacer vos (clics, no código)
 
-1. [supabase.com](https://supabase.com) → New project `kredian`.
-2. Settings → API: copiá Project URL y `anon` `public` a `.env.local`:
-   - `NEXT_PUBLIC_SUPABASE_URL`
-   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-3. Authentication → Providers → Email: para el MVP, desactivá **Confirm email**.
-4. Authentication → URL configuration: Site URL `http://localhost:3000`.
-5. SQL Editor: abrí `supabase/schema.sql`, pegá todo, Run.
-6. Reiniciá `npm run dev` y creá una cuenta en `/login`.
+1. **Supabase** → proyecto `kredian`.
+2. Settings → API: `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_ANON_KEY` en `.env.local`.
+3. Authentication → Email: desactivá **Confirm email**.
+4. URL configuration: Site URL `http://localhost:3000`.
+5. SQL Editor: pegá **todo** `supabase/schema.sql` y Run (incluye tablas, RLS y semilla de rangos).
+6. **Sepolia** en el mismo `.env.local`:
+   - `SEPOLIA_RPC_URL` (Alchemy o Infura)
+   - `SEPOLIA_PRIVATE_KEY` (wallet nueva, solo ETH de prueba)
+   - `KREDIAN_CONTRACT_ADDRESS=0x55C27efcF6d8707315f95FEaC8Ad569488fEe75E`
+7. En `/perfil`, el **nombre** tiene que coincidir con el de la insignia de Credly (si Credly no se puede leer, el plan B espera `Danny Carvajal`).
+8. Flujo: Entrar → pegar link → Leer insignia → Sellar → abrir `/u/tu-usuario` → Comprobar sello.
+9. Video (guion en `PROYECTO.md` sección 12). Vercel es opcional.
 
 Las llaves nunca van al repo.
-
-## Sello en Sepolia
-
-En el mismo `.env.local`, sin pegar llaves reales en el repo:
-
-```
-SEPOLIA_RPC_URL=
-SEPOLIA_PRIVATE_KEY=
-KREDIAN_CONTRACT_ADDRESS=0x55C27efcF6d8707315f95FEaC8Ad569488fEe75E
-```
-
-`SEPOLIA_RPC_URL` es la URL de Sepolia en Alchemy o Infura. `SEPOLIA_PRIVATE_KEY` es la de una wallet nueva, solo con ETH de prueba. La dirección del contrato ya está desplegada: no la cambies. Sin esas tres, `/api/sellar` no puede firmar. El detalle está en [`contracts/README.md`](./contracts/README.md).

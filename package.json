@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "tsx --test test/blockchain.test.ts test/sellar.test.ts test/perfil-publico.test.tsx",
+    "test": "tsx --test test/*.test.ts test/*.test.tsx",
     "probar:sello": "tsx scripts/probar-sello.ts"
   },
   "dependencies": {
