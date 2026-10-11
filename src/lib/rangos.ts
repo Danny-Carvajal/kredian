@@ -35,10 +35,14 @@ export const RANGOS_SEMILLA: FilaRango[] = [
 
 export function asignarRango(titulo: string | null | undefined): Rango | null {
   if (!titulo?.trim()) return null;
-  const hay = titulo.toLowerCase();
+  const hay = titulo
+    .toLowerCase()
+    .replace(/[^a-z0-9+]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
   let mejor: FilaRango | null = null;
   for (const fila of RANGOS_SEMILLA) {
-    if (!hay.includes(fila.patron)) continue;
+    if (!hay.includes(fila.patron.replace(/[^a-z0-9+]+/g, " ").trim())) continue;
     if (
       !mejor ||
       fila.patron.length > mejor.patron.length ||
