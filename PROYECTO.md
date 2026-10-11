@@ -339,19 +339,19 @@ Cursor escribe; Danny pega keys y SQL.
 
 Un solo camino: pegar link → leer → validar nombre → sellar → guardar → perfil público → comprobar.
 
-- [ ] `/api/credly` (o JSON de ejemplo si Credly no responde).
-- [ ] Comparar nombres (sin tildes, sin mayúsculas).
-- [ ] `/api/sellar` y `/api/comprobar` (ethers.js v6, firma solo en servidor, contrato sección 7).
-- [ ] En `/perfil`: pegar link dispara el flujo y lista credenciales.
-- [ ] `/u/[usuario]` público, botón "Comprobar sello", link Etherscan.
-- [ ] Probar el flujo **una vez** de punta a punta.
+- [x] `/api/credly` (o JSON de ejemplo si Credly no responde).
+- [x] Comparar nombres (sin tildes, sin mayúsculas).
+- [x] `/api/sellar` y `/api/comprobar` (ethers.js v6, firma solo en servidor, contrato sección 7).
+- [x] En `/perfil`: pegar link dispara el flujo y lista credenciales.
+- [x] `/u/[usuario]` público, botón "Comprobar sello", link Etherscan.
+- [ ] Probar el flujo **una vez** de punta a punta. (Danny, con keys reales)
 
 #### Sábado 10 — Que se vea producto
 
-- [ ] Home, login, perfil y público con un look simple (2 colores, no premio de diseño).
-- [ ] Tarjeta de credencial + 4 insignias de rango.
-- [ ] Seed de ~20 filas en `rangos` y asignar rango al guardar. Si no llega: sin rango.
-- [ ] Estados de carga y error.
+- [x] Home, login, perfil y público con un look simple (2 colores, no premio de diseño).
+- [x] Tarjeta de credencial + 4 insignias de rango.
+- [x] Seed de ~20 filas en `rangos` y asignar rango al guardar. Si no llega: sin rango.
+- [x] Estados de carga y error.
 - [ ] Probar sello 3 veces. Publicar Vercel si da; si no, localhost.
 
 #### Domingo 11 — Video

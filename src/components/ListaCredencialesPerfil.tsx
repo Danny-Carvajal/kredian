@@ -1,5 +1,7 @@
 import Link from "next/link";
+import { Aviso } from "@/components/Aviso";
 import BotonSellar from "@/components/BotonSellar";
+import { TarjetaCredencial } from "@/components/TarjetaCredencial";
 import {
   debeMostrarBotonSellar,
   linkTransaccion,
@@ -18,64 +20,40 @@ export default function ListaCredencialesPerfil({
   return (
     <section className="flex flex-col gap-4">
       <div>
-        <h2 className="font-medium">Tus credenciales</h2>
-        <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-          Si una todavía no tiene sello, podés mandarla a Sepolia. El perfil
-          público está en{" "}
-          <Link href={`/u/${usuario}`} className="underline">
+        <h2 className="font-medium text-ink">Tus credenciales</h2>
+        <p className="mt-1 text-sm text-muted">
+          Si una todavía no tiene sello, mandala a Sepolia. El perfil público está en{" "}
+          <Link href={`/u/${usuario}`} className="font-medium text-ink underline underline-offset-4">
             /u/{usuario}
           </Link>
           .
         </p>
       </div>
 
-      {error ? (
-        <p className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
-          {error}
-        </p>
-      ) : null}
+      {error ? <Aviso tono="error">{error}</Aviso> : null}
 
       {!error && credenciales.length === 0 ? (
-        <p className="text-sm text-zinc-600 dark:text-zinc-400">
-          Todavía no hay credenciales guardadas. Cuando exista una fila tuya,
-          acá aparece el botón Sellar.
+        <p className="text-sm text-muted">
+          Todavía no hay credenciales. Pegá un link de Credly arriba.
         </p>
       ) : null}
 
       <ul className="flex flex-col gap-3">
         {credenciales.map((credencial) => {
           const tx = linkTransaccion(credencial.tx_hash);
+          const sellar = debeMostrarBotonSellar(credencial);
           return (
-            <li
-              key={credencial.id}
-              className="flex flex-col gap-3 rounded-2xl border border-zinc-200 px-4 py-4 dark:border-zinc-800"
-            >
-              <div>
-                <p className="font-medium">{credencial.titulo ?? "Credencial"}</p>
-                {credencial.emisor ? (
-                  <p className="text-sm text-zinc-600 dark:text-zinc-400">{credencial.emisor}</p>
-                ) : null}
-              </div>
-              {debeMostrarBotonSellar(credencial) ? (
-                <BotonSellar credencialId={credencial.id} />
-              ) : (
-                <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                  Sellada.
-                  {tx ? (
-                    <>
-                      {" "}
-                      <a
-                        href={tx}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="underline"
-                      >
-                        Ver en Etherscan
-                      </a>
-                    </>
-                  ) : null}
-                </p>
-              )}
+            <li key={credencial.id}>
+              <TarjetaCredencial
+                titulo={credencial.titulo ?? "Credencial"}
+                emisor={credencial.emisor ?? ""}
+                fecha={credencial.fecha_emision ?? ""}
+                estado={credencial.estado ?? "vigente"}
+                rango={credencial.rango}
+                estadoSello={sellar ? "pendiente" : "verificado"}
+                comprobar={sellar ? <BotonSellar credencialId={credencial.id} /> : undefined}
+                etherscanUrl={tx}
+              />
             </li>
           );
         })}

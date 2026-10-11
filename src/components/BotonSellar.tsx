@@ -42,7 +42,7 @@ export default function BotonSellar({ credencialId }: { credencialId: string }) 
         onClick={sellar}
         disabled={cargando}
         aria-busy={cargando}
-        className="inline-flex h-10 items-center rounded-full bg-foreground px-5 text-sm font-medium text-background disabled:opacity-60"
+        className="inline-flex h-10 items-center rounded-full bg-ink px-5 text-sm font-medium text-white disabled:opacity-60"
       >
         {cargando ? "Sellando en Sepolia…" : "Sellar"}
       </button>
