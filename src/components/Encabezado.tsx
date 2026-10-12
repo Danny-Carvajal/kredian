@@ -18,7 +18,7 @@ export async function Encabezado() {
   }
 
   return (
-    <header className="sticky top-0 z-20 border-b border-line/80 bg-background/70 backdrop-blur-xl">
+    <header className="sticky top-0 z-30 border-b border-line/80 bg-background/70 backdrop-blur-xl">
       <div className="mx-auto flex h-14 w-full max-w-6xl items-center justify-between px-4 sm:h-16 sm:px-6">
         <Marca tamano={28} />
         <Link

@@ -4,7 +4,6 @@ import Link from "next/link";
 import { FondoParallax } from "@/components/FondoParallax";
 import { Hoja } from "@/components/Marca";
 import { InsigniaRango, RANGOS } from "@/components/InsigniaRango";
-import { PapelParallax } from "@/components/PapelParallax";
 import { PerfilPublico } from "@/components/PerfilPublico";
 
 const PASOS = [
@@ -32,7 +31,7 @@ const VIAJE = [
 
 export function Inicio() {
   return (
-    <div className="relative isolate overflow-x-clip">
+    <div className="relative z-[1]">
       <FondoParallax />
       <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-14 px-4 py-10 sm:gap-20 sm:px-6 sm:py-16">
         <section className="grid items-center gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-12">
@@ -75,25 +74,23 @@ export function Inicio() {
               className="pointer-events-none absolute -inset-6 rounded-[2.5rem] bg-seal/12 blur-3xl sm:-inset-8"
               aria-hidden
             />
-            <PapelParallax>
-              <PerfilPublico
-                ejemplo
-                nombre="Tu nombre"
-                usuario="tu-usuario"
-                credenciales={[
-                  {
-                    titulo: "AWS Educate Introduction to Cloud 101",
-                    emisor: "Amazon Web Services",
-                    fecha: "2026-03-12",
-                    estado: "vigente",
-                    rango: "oro",
-                    estadoSello: "pendiente",
-                    ejemplo: true,
-                    etherscanUrl: "https://sepolia.etherscan.io",
-                  },
-                ]}
-              />
-            </PapelParallax>
+            <PerfilPublico
+              ejemplo
+              nombre="Tu nombre"
+              usuario="tu-usuario"
+              credenciales={[
+                {
+                  titulo: "AWS Educate Introduction to Cloud 101",
+                  emisor: "Amazon Web Services",
+                  fecha: "2026-03-12",
+                  estado: "vigente",
+                  rango: "oro",
+                  estadoSello: "pendiente",
+                  ejemplo: true,
+                  etherscanUrl: "https://sepolia.etherscan.io",
+                },
+              ]}
+            />
           </div>
         </section>
 

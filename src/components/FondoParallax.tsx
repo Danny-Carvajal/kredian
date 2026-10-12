@@ -4,8 +4,7 @@ import { useEffect, useRef } from "react";
 import { Hoja } from "@/components/Marca";
 
 export function FondoParallax() {
-  const capaLenta = useRef<HTMLDivElement>(null);
-  const capaRapida = useRef<HTMLDivElement>(null);
+  const capa = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -16,15 +15,9 @@ export function FondoParallax() {
       if (frame) return;
       frame = requestAnimationFrame(() => {
         frame = 0;
-        const y = window.scrollY;
-        const mobile = window.innerWidth < 768;
-        const lenta = y * (mobile ? 0.08 : 0.18);
-        const rapida = y * (mobile ? 0.14 : 0.32);
-        if (capaLenta.current) {
-          capaLenta.current.style.transform = `translate3d(0, ${-lenta}px, 0)`;
-        }
-        if (capaRapida.current) {
-          capaRapida.current.style.transform = `translate3d(0, ${-rapida}px, 0)`;
+        const subir = window.scrollY * 0.22;
+        if (capa.current) {
+          capa.current.style.transform = `translate3d(0, ${-subir}px, 0)`;
         }
       });
     };
@@ -38,21 +31,14 @@ export function FondoParallax() {
   }, []);
 
   return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
-      <div
-        ref={capaLenta}
-        className="absolute -left-16 top-10 text-seal/25 will-change-transform sm:-left-6"
-      >
-        <Hoja className="h-48 w-48 sm:h-72 sm:w-72" />
-      </div>
-      <div
-        ref={capaRapida}
-        className="absolute -right-10 top-52 text-seal/20 will-change-transform sm:right-4 sm:top-24"
-      >
-        <Hoja className="h-36 w-36 rotate-[200deg] sm:h-56 sm:w-56" />
-      </div>
-      <div className="absolute bottom-10 left-1/3 text-wax/15">
-        <Hoja className="h-28 w-28 rotate-12 sm:h-40 sm:w-40" />
+    <div
+      className="pointer-events-none fixed inset-0 z-0 overflow-hidden"
+      aria-hidden
+    >
+      <div ref={capa} className="absolute inset-0 will-change-transform">
+        <Hoja className="absolute -left-10 top-24 h-56 w-56 text-seal/20 sm:h-80 sm:w-80" />
+        <Hoja className="absolute -right-8 top-40 h-44 w-44 rotate-[210deg] text-seal/15 sm:h-64 sm:w-64" />
+        <Hoja className="absolute bottom-[20%] left-[40%] h-32 w-32 rotate-12 text-wax/10 sm:h-48 sm:w-48" />
       </div>
     </div>
   );
