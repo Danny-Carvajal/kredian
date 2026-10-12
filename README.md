@@ -4,7 +4,11 @@ Verifica certificaciones tech de Credly y deja un **sello en blockchain** que cu
 
 Repo: https://github.com/Danny-Carvajal/kredian  
 La fuente de verdad del producto es [`PROYECTO.md`](./PROYECTO.md).  
-El código que hay que clonar para el video es **`main`**.
+El código está en **`main`**.
+
+**El equipo no tiene que armar `.env`.** Eso lo hace una sola vez Danny y se publica en Vercel. El resto abre la URL y graba.
+
+Cuando el deploy esté listo, la demo es: `https://(tu-proyecto).vercel.app`
 
 ## Stack
 
@@ -13,7 +17,28 @@ El código que hay que clonar para el video es **`main`**.
 - Supabase (login y base de datos)
 - Sepolia + ethers.js v6 (sello)
 
-## Clonar (Ubuntu o Git Bash)
+## Vercel (una vez, cuenta de Danny)
+
+1. Entrá a [vercel.com](https://vercel.com) con GitHub (`Danny-Carvajal`).
+2. **Add New… → Project → Import** el repo `kredian`.
+3. Framework: Next.js. Root: `.`
+4. **Environment Variables** — las mismas 5 de tu `.env.local` (no las pegues en el chat). Marcá Production, Preview y Development:
+
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+   - `SEPOLIA_RPC_URL`
+   - `SEPOLIA_PRIVATE_KEY`
+   - `KREDIAN_CONTRACT_ADDRESS`
+
+5. **Deploy**. Copiá la URL (`https://kredian-….vercel.app`).
+6. En **Supabase → Authentication → URL Configuration**:
+   - Site URL: esa URL de Vercel
+   - Redirect URLs: la de Vercel **y** `http://localhost:3000/**`
+7. Mandale al equipo **solo la URL**. Con eso entran, sellan y graban. Sin clone, sin Alchemy, sin MetaMask.
+
+Si el login en Vercel falla, casi seguro faltó el paso 6.
+
+## Clonar (solo si alguien quiere correrlo en su PC)
 
 Una línea a la vez. En Git Bash usá `/`, no `\`.
 
