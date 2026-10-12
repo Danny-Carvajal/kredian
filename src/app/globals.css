@@ -4,8 +4,8 @@
   --kredian-ink: #e7f3ec;
   --kredian-seal: #4e9a6a;
   --kredian-wax: #c4894a;
-  --kredian-paper: #f3ead8;
-  --kredian-paper-ink: #1c2a24;
+  --kredian-paper: #12241c;
+  --kredian-paper-ink: #e7f3ec;
   --background: #07140f;
   --foreground: #dceae1;
   --surface: #0d1c16;
@@ -89,7 +89,7 @@ textarea:focus-visible {
 
 .papel {
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.35), transparent 28%),
+    linear-gradient(180deg, rgba(78, 154, 106, 0.08), transparent 42%),
     var(--kredian-paper);
   color: var(--kredian-paper-ink);
 }
