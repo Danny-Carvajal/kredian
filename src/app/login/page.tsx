@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { Aviso } from "@/components/Aviso";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
-import { crearCuenta, iniciarSesion } from "./actions";
+import { isDemoConfigured } from "@/lib/demo";
+import { crearCuenta, entrarDemo, iniciarSesion } from "./actions";
 
 type Props = {
   searchParams: Promise<{ error?: string; ok?: string }>;
@@ -14,6 +15,9 @@ function textoError(codigo: string | undefined) {
   }
   if (codigo === "faltan") return "Escribí correo y contraseña.";
   if (codigo === "clave") return "La contraseña tiene que tener al menos 6 caracteres.";
+  if (codigo === "demo") {
+    return "La cuenta demo no está configurada en este deploy. Danny tiene que crear un usuario aparte y poner KREDIAN_DEMO_EMAIL y KREDIAN_DEMO_PASSWORD en Vercel (nunca en git).";
+  }
   return codigo;
 }
 
@@ -25,6 +29,7 @@ export default async function LoginPage({ searchParams }: Props) {
   const error = textoError(params.error);
   const listo = params.ok === "revisar";
   const configurado = isSupabaseConfigured();
+  const hayDemo = configurado && isDemoConfigured();
 
   return (
     <div className="flex flex-1 flex-col items-center px-4 py-8 sm:px-6 sm:py-12">
@@ -58,6 +63,26 @@ export default async function LoginPage({ searchParams }: Props) {
           </Aviso>
         ) : null}
 
+        {hayDemo ? (
+          <form id="demo">
+            <button
+              formAction={entrarDemo}
+              className="h-12 w-full rounded-full bg-seal text-base font-semibold text-[#06210f] transition hover:brightness-110"
+            >
+              Entrar al demo
+            </button>
+            <p className="mt-2 text-center text-sm leading-6 text-muted">
+              Para el video del equipo. No pide la contraseña de nadie.
+            </p>
+          </form>
+        ) : null}
+
+        {hayDemo ? (
+          <p className="text-center text-[11px] font-semibold uppercase tracking-[0.18em] text-muted">
+            O tu cuenta
+          </p>
+        ) : null}
+
         <form className="flex flex-col gap-4">
           <label className="flex flex-col gap-1.5 text-sm font-medium text-ink">
             Correo
@@ -83,7 +108,11 @@ export default async function LoginPage({ searchParams }: Props) {
           <button
             formAction={iniciarSesion}
             disabled={!configurado}
-            className="h-12 rounded-full bg-seal text-base font-semibold text-[#06210f] transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50"
+            className={
+              hayDemo
+                ? "h-12 rounded-full border border-line bg-transparent text-base font-medium text-ink disabled:cursor-not-allowed disabled:opacity-50"
+                : "h-12 rounded-full bg-seal text-base font-semibold text-[#06210f] transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50"
+            }
           >
             Entrar
           </button>

@@ -4,7 +4,7 @@ Leé `PROYECTO.md` entero antes de escribir código.
 
 **Modo solo:** Danny + Cursor construyen el MVP completo (sección 9 plan solo, sección 15 modo solo). No esperes al resto del equipo.
 
-**Video / guion:** si te piden un guion, pitch, o “qué mostrar en cámara”, leé `GUION-VIDEO.md` completo (es el legado). Entregá texto listo para leer en voz alta, con marcas de pantalla. No inventes emisores, CSV, Resend, Apple, Stellar ni mainnet. Plan B y honestidad (Sepolia, hash, fixtures) van en el video. Prompt para pegar: está arriba de `GUION-VIDEO.md`.
+**Video / guion:** si te piden un guion, pitch, o “qué mostrar en cámara”, leé `GUION-VIDEO.md` completo (es el legado). Entregá texto listo para leer en voz alta, con marcas de pantalla. No inventes emisores, CSV, Resend, Apple, Stellar ni mainnet. Plan B y honestidad (Sepolia, hash, fixtures) van en el video. Prompt para pegar: está arriba de `GUION-VIDEO.md`. El equipo entra con **Entrar al demo** (`KREDIAN_DEMO_EMAIL` / `KREDIAN_DEMO_PASSWORD` solo en Vercel, nunca en git, nunca la cuenta personal de Danny).
 
 <!-- BEGIN:nextjs-agent-rules -->
 
