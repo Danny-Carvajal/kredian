@@ -18,8 +18,8 @@ export function EstadoError({
 
   return (
     <div className="mx-auto flex w-full max-w-lg flex-1 flex-col items-start gap-4 px-6 py-16">
-      <p className="text-sm font-semibold uppercase tracking-[0.14em] text-ink">Kredian</p>
-      <h1 className="text-2xl font-semibold tracking-tight text-ink">{titulo}</h1>
+      <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-seal">Kredian</p>
+      <h1 className="font-display text-3xl text-ink">{titulo}</h1>
       <p className="text-base leading-7 text-muted">
         No pudimos cargar esta pantalla. Probá de nuevo en un momento.
       </p>
@@ -28,13 +28,13 @@ export function EstadoError({
         <button
           type="button"
           onClick={() => retry()}
-          className="inline-flex h-11 items-center justify-center rounded-full bg-ink px-5 text-sm font-medium text-white transition-opacity hover:opacity-90"
+          className="inline-flex h-11 items-center justify-center rounded-full bg-seal px-5 text-sm font-semibold text-[#06210f] transition hover:brightness-110"
         >
           Reintentar
         </button>
         <Link
           href="/"
-          className="inline-flex h-11 items-center justify-center rounded-full border border-ink px-5 text-sm font-medium text-ink"
+          className="inline-flex h-11 items-center justify-center rounded-full border border-line px-5 text-sm font-medium text-ink"
         >
           Ir al inicio
         </Link>

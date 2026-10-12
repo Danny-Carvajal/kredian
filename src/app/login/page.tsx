@@ -18,7 +18,7 @@ function textoError(codigo: string | undefined) {
 }
 
 const CAMPO =
-  "h-11 rounded-xl border border-line bg-surface px-3 text-base text-foreground outline-none focus:border-ink focus:ring-2 focus:ring-ink/20";
+  "h-11 rounded-xl border border-line bg-background/70 px-3 text-base text-foreground outline-none placeholder:text-muted/70 focus:border-seal";
 
 export default async function LoginPage({ searchParams }: Props) {
   const params = await searchParams;
@@ -28,10 +28,10 @@ export default async function LoginPage({ searchParams }: Props) {
 
   return (
     <div className="flex flex-1 flex-col items-center px-6 py-12">
-      <main className="flex w-full max-w-md flex-col gap-6 rounded-3xl border border-line bg-surface px-6 py-8 shadow-sm">
+      <main className="flex w-full max-w-md flex-col gap-6 rounded-[1.75rem] border border-line bg-surface/90 px-6 py-8 shadow-[0_24px_80px_-40px_rgba(78,154,106,0.35)]">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.14em] text-ink">Kredian</p>
-          <h1 className="mt-2 text-3xl font-semibold tracking-tight text-ink">Entrar</h1>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-seal">Kredian</p>
+          <h1 className="font-display mt-2 text-4xl text-ink">Entrar</h1>
           <p className="mt-3 text-muted">
             Correo y contraseña. Google queda para si sobra tiempo.
           </p>
@@ -83,14 +83,14 @@ export default async function LoginPage({ searchParams }: Props) {
           <button
             formAction={iniciarSesion}
             disabled={!configurado}
-            className="h-12 rounded-full bg-ink text-base font-medium text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+            className="h-12 rounded-full bg-seal text-base font-semibold text-[#06210f] transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50"
           >
             Entrar
           </button>
           <button
             formAction={crearCuenta}
             disabled={!configurado}
-            className="h-12 rounded-full border border-ink bg-surface text-base font-medium text-ink disabled:cursor-not-allowed disabled:opacity-50"
+            className="h-12 rounded-full border border-line bg-transparent text-base font-medium text-ink disabled:cursor-not-allowed disabled:opacity-50"
           >
             Crear cuenta
           </button>

@@ -1,14 +1,17 @@
 @import "tailwindcss";
 
 :root {
-  --kredian-ink: #123f38;
-  --kredian-seal: #b8893a;
-  --background: #f3f6f4;
-  --foreground: #14241f;
-  --surface: #ffffff;
-  --muted: #4e615b;
-  --line: #d5e0db;
-  color-scheme: light;
+  --kredian-ink: #e7f3ec;
+  --kredian-seal: #4e9a6a;
+  --kredian-wax: #c4894a;
+  --kredian-paper: #f3ead8;
+  --kredian-paper-ink: #1c2a24;
+  --background: #07140f;
+  --foreground: #dceae1;
+  --surface: #0d1c16;
+  --muted: #8aa898;
+  --line: #234033;
+  color-scheme: dark;
 }
 
 @theme inline {
@@ -16,17 +19,41 @@
   --color-foreground: var(--foreground);
   --color-ink: var(--kredian-ink);
   --color-seal: var(--kredian-seal);
+  --color-wax: var(--kredian-wax);
+  --color-paper: var(--kredian-paper);
+  --color-paper-ink: var(--kredian-paper-ink);
   --color-surface: var(--surface);
   --color-muted: var(--muted);
   --color-line: var(--line);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-instrument);
 }
 
 body {
-  background: var(--background);
+  background:
+    radial-gradient(1000px 560px at 8% -8%, rgba(78, 154, 106, 0.22), transparent 55%),
+    radial-gradient(800px 420px at 100% 8%, rgba(196, 137, 74, 0.1), transparent 46%),
+    var(--background);
   color: var(--foreground);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+body::before {
+  content: "";
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  opacity: 0.18;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cg fill='none' stroke='%234e9a6a' stroke-width='1.2' opacity='.55'%3E%3Cpath d='M28 132c18-28 22-52 8-78 22 10 34 32 30 58-18 8-30 14-38 20z'/%3E%3Cpath d='M36 54c8 14 6 28-2 40'/%3E%3Cpath d='M118 22c-16 26-12 48 6 72-24-4-38-22-40-48 14-10 26-16 34-24z'/%3E%3C/g%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.28'/%3E%3C/svg%3E");
+}
+
+body > * {
+  position: relative;
+  z-index: 1;
 }
 
 a:focus-visible,
@@ -37,21 +64,27 @@ textarea:focus-visible {
   outline-offset: 2px;
 }
 
-/* El botón real de comprobar, cuando se inserta en la tarjeta, hereda el look. */
 .hueco-sello button {
   border: 0;
   border-radius: 9999px;
-  background: var(--kredian-ink);
-  color: #fff;
+  background: var(--kredian-wax);
+  color: #1a1408;
   font-weight: 600;
 }
 
 .hueco-sello button:hover:not(:disabled) {
-  opacity: 0.92;
+  filter: brightness(1.06);
 }
 
 .hueco-sello a {
-  color: var(--kredian-ink);
+  color: var(--kredian-wax);
   font-weight: 600;
   text-underline-offset: 3px;
+}
+
+.papel {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.35), transparent 28%),
+    var(--kredian-paper);
+  color: var(--kredian-paper-ink);
 }

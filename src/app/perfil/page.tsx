@@ -37,7 +37,7 @@ function textoOk(codigo: string | undefined) {
 }
 
 const CAMPO =
-  "h-11 rounded-xl border border-line bg-surface px-3 text-base text-foreground outline-none focus:border-ink focus:ring-2 focus:ring-ink/20";
+  "h-11 rounded-xl border border-line bg-background/70 px-3 text-base text-foreground outline-none placeholder:text-muted/70 focus:border-seal";
 
 export default async function PerfilPage({ searchParams }: Props) {
   const params = await searchParams;
@@ -85,7 +85,7 @@ export default async function PerfilPage({ searchParams }: Props) {
     <div className="mx-auto flex w-full max-w-xl flex-1 flex-col gap-8 px-6 py-12">
       <header className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-semibold tracking-tight text-ink">Tu perfil</h1>
+          <h1 className="font-display text-4xl text-ink">Tu perfil</h1>
           <p className="mt-2 text-muted">
             Este nombre se va a comparar con el de la insignia de Credly.
           </p>
@@ -100,7 +100,7 @@ export default async function PerfilPage({ searchParams }: Props) {
       {error ? <Aviso tono="error">{error}</Aviso> : null}
       {ok ? <Aviso tono="ok">{ok}</Aviso> : null}
 
-      <form action={guardarPerfil} className="flex flex-col gap-4 rounded-3xl border border-line bg-surface p-5 shadow-sm">
+      <form action={guardarPerfil} className="flex flex-col gap-4 rounded-[1.75rem] border border-line bg-surface/90 p-5">
         <label className="flex flex-col gap-1.5 text-sm font-medium text-ink">
           Nombre
           <input name="nombre" defaultValue={perfil.nombre ?? ""} className={CAMPO} />
@@ -125,18 +125,18 @@ export default async function PerfilPage({ searchParams }: Props) {
             name="descripcion"
             rows={4}
             defaultValue={perfil.descripcion ?? ""}
-            className="rounded-xl border border-line bg-surface px-3 py-2 text-base text-foreground outline-none focus:border-ink focus:ring-2 focus:ring-ink/20"
+            className="rounded-xl border border-line bg-background/70 px-3 py-2 text-base text-foreground outline-none focus:border-seal"
           />
         </label>
         <button
           type="submit"
-          className="h-12 rounded-full bg-ink text-base font-medium text-white transition-opacity hover:opacity-90"
+          className="h-12 rounded-full bg-seal text-base font-semibold text-[#06210f] transition hover:brightness-110"
         >
           Guardar
         </button>
       </form>
 
-      <form action={pegarCredly} className="rounded-2xl border border-dashed border-line bg-surface px-4 py-6">
+      <form action={pegarCredly} className="rounded-[1.5rem] border border-dashed border-seal/30 bg-surface/70 px-4 py-6">
         <h2 className="font-medium text-ink">Pegar link de Credly</h2>
         <p className="mt-2 text-sm leading-6 text-muted">
           El link tiene que ser el público de la insignia (credly.com/badges/…).
@@ -154,7 +154,7 @@ export default async function PerfilPage({ searchParams }: Props) {
         </label>
         <button
           type="submit"
-          className="mt-4 h-12 w-full rounded-full bg-ink text-base font-medium text-white transition-opacity hover:opacity-90"
+          className="mt-4 h-12 w-full rounded-full bg-seal text-base font-semibold text-[#06210f] transition hover:brightness-110"
         >
           Leer insignia
         </button>
