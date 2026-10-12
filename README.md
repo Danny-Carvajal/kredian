@@ -95,7 +95,7 @@ http://localhost:3000
 
 ## Demo / video
 
-Guion: `PROYECTO.md` sección 12.
+**Compañero que graba:** abrí Cursor en este repo y pegá el prompt de [`GUION-VIDEO.md`](./GUION-VIDEO.md). Ese archivo es el legado: contexto, qué mostrar, qué no inventar, y el texto para leer en voz alta. El outline corto sigue en `PROYECTO.md` sección 12.
 
 1. Home oscura (planta) → **Entrar**.
 2. Crear cuenta o entrar.

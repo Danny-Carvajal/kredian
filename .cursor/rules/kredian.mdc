@@ -7,6 +7,8 @@ Antes de escribir código, leé `PROYECTO.md` completo. Es la única fuente de v
 
 **Modo solo (8 oct):** Danny + Cursor entregan el MVP. No esperes código de José, Juliana ni Daniel. No preguntes por ellos para poder avanzar. Seguí la sección 9 (plan solo) y la sección 15 (Modo solo).
 
+**Video:** si el usuario pide guion, pitch o qué grabar, leé `GUION-VIDEO.md` y dale el texto hablado + cues de pantalla. No improvises el producto. Plan B = `src/data/credly-ejemplos.ts` y hay que decirlo en cámara. Sepolia es testnet.
+
 Orden: login + tablas → flujo Credly/validar/sellar/perfil público → pulido → video. No inventes emisores, CSV, Resend, Apple, ni otras fuentes. No cambies el contrato ni el orden de claves del hash (sección 7). No commitees `.env.local`.
 
 Stack: Next.js App Router + TypeScript + Tailwind + Supabase + ethers.js v6. UI en español.

@@ -4,6 +4,7 @@
 > Si algo no está aquí, no está decidido. Si el PDF viejo o un chat dicen otra cosa, manda este archivo.
 > Cursor y cualquier IA deben leer este archivo completo antes de escribir código.
 > En especial la **sección 4** (modo solo), la **sección 9** (plan) y la **sección 15**.
+> Si la tarea es el **video o un guion hablado**, leé también [`GUION-VIDEO.md`](./GUION-VIDEO.md).
 > Solo Danny edita este archivo.
 >
 > **8 oct — modo solo:** José, Juliana y Daniel no se ve que vayan a codear.
@@ -393,16 +394,22 @@ Lo ideal: que al menos 2 del equipo saquen una, para probar la comparación de n
 
 ---
 
-## 12. Guion del video (borrador)
+## 12. Guion del video
 
-Dueño en modo solo: **Danny** (guion, grabación, edición, voz).
+El texto para **leer en voz alta**, las marcas de pantalla y el prompt para Cursor están en [`GUION-VIDEO.md`](./GUION-VIDEO.md). Quien graba (u otro Cursor) lee ese archivo; no inventar el producto.
+
+Dueño en modo solo: **Danny** (guion, grabación, edición, voz). Un compañero puede grabar con ese legado.
+
+Outline (~2 min):
 
 1. **Problema (15 s):** "¿Cómo sabés que ese AWS en el CV es real?"
-2. **Kredian (10 s):** qué es, en una frase.
-3. **Demo (60–90 s):** entrar → pegar link → ver insignia verificada → sello en Sepolia → perfil público → "Comprobar sello".
-4. **Por qué blockchain (15 s):** testigo neutral, nadie lo puede alterar.
+2. **Kredian (10 s):** qué es, en una frase. No somos emisores.
+3. **Demo (60–90 s):** entrar → pegar link → leer insignia → sello en Sepolia → perfil público → "Comprobar sello".
+4. **Por qué blockchain (15 s):** testigo neutral; solo un hash; Sepolia es testnet.
 5. **Futuro (15 s):** universidades de Costa Rica, más fuentes, prueba de habilidad.
 6. **Cierre (5 s):** logo y nombre.
+
+Si usaron las URLs `plan-b-…`, **decirlo** en el video (JSON de ejemplo). Si Credly real funciona, usar esa.
 
 ---
 
@@ -429,6 +436,7 @@ Si un compañero aparece: que clone `main` y avise. No se le espera.
 | 6 oct | Entrega: video vendiendo el producto. |
 | 6 oct | Roles (histórico): José = login; Juliana = sello; Daniel = diseño; Danny = Credly. |
 | 8 oct | Modo solo: Danny + Cursor entregan el MVP. No se espera código del resto. |
+| 12 oct | Guion hablado y legado para Cursor del video: `GUION-VIDEO.md`. |
 
 ---
 
@@ -447,6 +455,7 @@ Reglas:
 - No commitees `.env.local` ni llaves.
 - Contrato y orden de claves del hash: sección 7, sin cambios.
 - Lo que Danny tiene que clickear (Supabase, Remix, keys) dejalo en un SQL/`README` corto o instrucciones, no lo simules con secretos inventados.
+- Si piden guion o video: `GUION-VIDEO.md`. Texto para leer, no un remix del PDF viejo.
 
 **Prompt para pegar:**
 
