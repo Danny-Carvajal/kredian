@@ -24,7 +24,7 @@ export default async function PerfilPublicoPage({ params }: Props) {
   if (!isSupabaseConfigured()) {
     return (
       <div className="mx-auto flex w-full max-w-xl flex-1 flex-col gap-4 px-6 py-16">
-        <h1 className="text-3xl font-semibold text-ink">Perfil</h1>
+        <h1 className="font-display text-4xl text-ink">Perfil</h1>
         <p className="text-muted">
           Configurá Supabase en `.env.local` y corré `supabase/schema.sql` para
           ver perfiles públicos.
