@@ -2,7 +2,9 @@
 
 Verifica certificaciones tech de Credly y deja un **sello en blockchain** que cualquier reclutador puede comprobar.
 
-La fuente de verdad del proyecto es [`PROYECTO.md`](./PROYECTO.md). Leelo antes de escribir código.
+Repo: https://github.com/Danny-Carvajal/kredian  
+La fuente de verdad del producto es [`PROYECTO.md`](./PROYECTO.md).  
+El código que hay que clonar para el video es **`main`**.
 
 ## Stack
 
@@ -11,34 +13,80 @@ La fuente de verdad del proyecto es [`PROYECTO.md`](./PROYECTO.md). Leelo antes 
 - Supabase (login y base de datos)
 - Sepolia + ethers.js v6 (sello)
 
-## Cómo correrlo (Git Bash)
+## Clonar (Ubuntu o Git Bash)
 
-En Git Bash usá `/` en las rutas, no `\`. Un comando por línea.
+Una línea a la vez. En Git Bash usá `/`, no `\`.
 
 ```bash
-cd /c/Users/Danny/code/kredian
+mkdir -p ~/code
+cd ~/code
+git clone https://github.com/Danny-Carvajal/kredian.git
+cd kredian
 git checkout main
 git pull origin main
 npm install
 cp .env.example .env.local
+```
+
+Si **ya** tenés la carpeta:
+
+```bash
+cd ~/code/kredian
+git checkout main
+git pull origin main
+npm install
+```
+
+No subas `.env.local`. Las llaves no van al chat ni al repo.
+
+## `.env.local`
+
+Copiá esto y llená los valores (el contrato ya está):
+
+```
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SEPOLIA_RPC_URL=
+SEPOLIA_PRIVATE_KEY=
+KREDIAN_CONTRACT_ADDRESS=0x55C27efcF6d8707315f95FEaC8Ad569488fEe75E
+```
+
+1. **Supabase** → proyecto `kredian`.
+2. **Connect** (botón verde) o Project ID + `.supabase.co`: `NEXT_PUBLIC_SUPABASE_URL` (`https://xxxx.supabase.co`).
+3. **API Keys → Legacy anon**: la key `eyJ...` → `NEXT_PUBLIC_SUPABASE_ANON_KEY`. No uses `sb_secret_`.
+4. Authentication → Providers → Email: apagá **Confirm email**.
+5. URL configuration: Site URL `http://localhost:3000`.
+6. SQL Editor: pegá **todo** [`supabase/schema.sql`](./supabase/schema.sql) y **Run**.
+7. Alchemy, red **Sepolia** (la URL tiene que decir `eth-sepolia`) → `SEPOLIA_RPC_URL`.
+8. MetaMask, cuenta de **prueba**, red Sepolia, ETH de faucet → `SEPOLIA_PRIVATE_KEY`.
+
+Después:
+
+```bash
 npm run dev
 ```
 
 http://localhost:3000
 
-## Lo que tenés que hacer vos (clics, no código)
+## Demo / video
 
-1. **Supabase** → proyecto `kredian`.
-2. Settings → API: `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_ANON_KEY` en `.env.local`.
-3. Authentication → Email: desactivá **Confirm email**.
-4. URL configuration: Site URL `http://localhost:3000`.
-5. SQL Editor: pegá **todo** `supabase/schema.sql` y Run (incluye tablas, RLS y semilla de rangos).
-6. **Sepolia** en el mismo `.env.local`:
-   - `SEPOLIA_RPC_URL` (Alchemy o Infura)
-   - `SEPOLIA_PRIVATE_KEY` (wallet nueva, solo ETH de prueba)
-   - `KREDIAN_CONTRACT_ADDRESS=0x55C27efcF6d8707315f95FEaC8Ad569488fEe75E`
-7. En `/perfil`, el **nombre** tiene que coincidir con el de la insignia de Credly (si Credly no se puede leer, el plan B espera `Danny Carvajal`).
-8. Flujo: Entrar → pegar link → Leer insignia → Sellar → abrir `/u/tu-usuario` → Comprobar sello.
-9. Video (guion en `PROYECTO.md` sección 12). Vercel es opcional.
+Guion: `PROYECTO.md` sección 12.
 
-Las llaves nunca van al repo.
+1. Home oscura (planta) → **Entrar**.
+2. Crear cuenta o entrar.
+3. Perfil: nombre igual al de la insignia. Plan B: **`Danny Carvajal`**.
+4. Pegar link de Credly. Si no hay badge pública:
+
+   `https://www.credly.com/badges/plan-b-aws-educate-cloud-101/public_url`
+
+5. **Leer insignia** → **Sellar** → **Ver en Etherscan**.
+6. Abrir `/u/tu-usuario` → **Comprobar sello**.
+
+En el video: si usaron el JSON de ejemplo, decilo. Sepolia es red de pruebas.
+
+## Si algo falla
+
+- `fetch failed` / `Could not resolve host`: la URL de Supabase está mal o falta reiniciar `npm run dev` después de editar `.env.local`.
+- `public.profiles`: no corriste `schema.sql`.
+- Overlay `profiles_pkey`: recargá `/perfil`; el perfil ya existe.
+- Faucet Alchemy pide ETH de mainnet: usá [Google Cloud Sepolia](https://cloud.google.com/application/web3/faucet/ethereum/sepolia) o [PoW](https://sepolia-faucet.pk910.de/).
