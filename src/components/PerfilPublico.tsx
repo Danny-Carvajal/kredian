@@ -34,7 +34,7 @@ export function PerfilPublico({
   }
 
   return (
-    <section className="papel rounded-[1.75rem] border border-black/10 p-6 text-paper-ink shadow-[0_28px_70px_-36px_rgba(12,28,20,0.65)]">
+    <section className="papel rounded-[1.5rem] border border-black/10 p-4 text-paper-ink shadow-[0_28px_70px_-36px_rgba(12,28,20,0.65)] sm:rounded-[1.75rem] sm:p-6">
       {ejemplo ? (
         <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-seal">Papel de ejemplo</p>
       ) : null}

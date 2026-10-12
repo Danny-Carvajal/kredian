@@ -64,7 +64,7 @@ export function TarjetaCredencial({
   return (
     <article className="papel overflow-hidden rounded-[1.2rem] border border-black/10 text-paper-ink shadow-[0_18px_40px_-28px_rgba(28,42,36,0.55)]">
       <div className="h-1.5 bg-gradient-to-r from-wax via-seal to-seal/30" />
-      <div className="flex flex-col gap-4 p-5">
+      <div className="flex flex-col gap-4 p-4 sm:p-5">
         <div className="flex items-start justify-between gap-3">
           <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-seal">
             {ejemplo ? "Ejemplo · Credly" : "Credly"}

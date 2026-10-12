@@ -50,10 +50,10 @@ export function Marca({ tamano = 32 }: { tamano?: number }) {
   return (
     <Link
       href="/"
-      className="inline-flex items-center gap-2.5 text-ink"
+      className="inline-flex items-center gap-2 text-ink sm:gap-2.5"
     >
       <Sello tamano={tamano} />
-      <span className="font-display text-xl tracking-tight">Kredian</span>
+      <span className="font-display text-lg tracking-tight sm:text-xl">Kredian</span>
     </Link>
   );
 }

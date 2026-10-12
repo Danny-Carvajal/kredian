@@ -82,10 +82,10 @@ export default async function PerfilPage({ searchParams }: Props) {
     .filter((credencial): credencial is CredencialVisible => credencial !== null);
 
   return (
-    <div className="mx-auto flex w-full max-w-xl flex-1 flex-col gap-8 px-6 py-12">
+    <div className="mx-auto flex w-full max-w-xl min-w-0 flex-1 flex-col gap-8 px-4 py-8 sm:px-6 sm:py-12">
       <header className="flex items-start justify-between gap-4">
-        <div>
-          <h1 className="font-display text-4xl text-ink">Tu perfil</h1>
+        <div className="min-w-0">
+          <h1 className="font-display text-3xl text-ink sm:text-4xl">Tu perfil</h1>
           <p className="mt-2 text-muted">
             Este nombre se va a comparar con el de la insignia de Credly.
           </p>
