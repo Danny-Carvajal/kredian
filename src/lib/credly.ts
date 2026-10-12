@@ -1,4 +1,4 @@
-import ejemplo from "@/data/credly-ejemplo.json";
+import { ejemploPorUrl } from "@/data/credly-ejemplos";
 
 export type InsigniaCredly = {
   fuente: "credly";
@@ -138,10 +138,11 @@ async function fetchJson(url: string, signal: AbortSignal): Promise<Record<strin
 }
 
 function insigniaPlanB(url: string, badgeId: string | null): InsigniaCredly {
+  const ejemplo = ejemploPorUrl(url, badgeId);
   return {
     fuente: "credly",
-    url,
-    badge_id: badgeId ?? ejemplo.badge_id,
+    url: ejemplo.url,
+    badge_id: ejemplo.badge_id,
     titulo: ejemplo.titulo,
     emisor: ejemplo.emisor,
     nombre_en_insignia: ejemplo.nombre_en_insignia,

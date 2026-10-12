@@ -100,9 +100,11 @@ Guion: `PROYECTO.md` sección 12.
 1. Home oscura (planta) → **Entrar**.
 2. Crear cuenta o entrar.
 3. Perfil: nombre igual al de la insignia. Plan B: **`Danny Carvajal`**.
-4. Pegar link de Credly. Si no hay badge pública:
+4. Pegar **un link por insignia** y leer + sellar cada una. Si Credly tiene badges públicas reales, usá esas. Si no, plan B (nombre del perfil: **Danny Carvajal**), tres URLs distintas:
 
-   `https://www.credly.com/badges/plan-b-aws-educate-cloud-101/public_url`
+   - `https://www.credly.com/badges/plan-b-aws-educate-cloud-101/public_url`
+   - `https://www.credly.com/badges/plan-b-aws-cloud-practitioner/public_url`
+   - `https://www.credly.com/badges/plan-b-comptia-security-plus/public_url`
 
 5. **Leer insignia** → **Sellar** → **Ver en Etherscan**.
 6. Abrir `/u/tu-usuario` → **Comprobar sello**.
