@@ -1,6 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { credencialesDemo } from "@/lib/demo";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { createClient } from "@/lib/supabase/server";
 import { asegurarPerfil } from "@/lib/profiles";
@@ -16,6 +17,30 @@ function mensajeAuth(error: string) {
     return error;
   }
   return error;
+}
+
+export async function entrarDemo() {
+  if (!isSupabaseConfigured()) {
+    redirect("/login?error=config");
+  }
+
+  const demo = credencialesDemo();
+  if (!demo) {
+    redirect("/login?error=demo");
+  }
+
+  const supabase = await createClient();
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email: demo.correo,
+    password: demo.clave,
+  });
+
+  if (error || !data.user) {
+    redirect(`/login?error=${encodeURIComponent(mensajeAuth(error?.message ?? "No se pudo entrar al demo"))}`);
+  }
+
+  await asegurarPerfil(supabase, data.user);
+  redirect("/perfil");
 }
 
 export async function iniciarSesion(formData: FormData) {

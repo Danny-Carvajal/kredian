@@ -43,7 +43,7 @@ Frase canónica: *«Verifica certificaciones tech de Credly y deja un sello en b
 ### Cómo se graba (equipo)
 1. Danny deploya en Vercel una vez (README). El resto **no clona ni arma `.env`**.
 2. Abrir la URL de Vercel. Si no hay URL, `npm run dev` en la máquina de Danny.
-3. Cuenta de demo: crear una en `/login` o reusar la de Danny.
+3. En `/login` pulsar **Entrar al demo** (cuenta aparte en env de Vercel; nadie usa la contraseña personal de Danny).
 4. Nombre del perfil = nombre de la insignia.
 
 ### Plan B (si Credly no scrapeó)
@@ -101,10 +101,10 @@ Marcas: **[PANTALLA]** = qué mostrar. *Cursiva* = acción, no se lee.
 
 ### 3. Demo — entrar (~12 s)
 
-**[PANTALLA]** Clic **Entrar** → `/login`. Correo + contraseña (cuenta ya creada). *No muestres contraseñas en zoom.*
+**[PANTALLA]** Clic **Entrar** → `/login`. Clic **Entrar al demo**. *No escribas ni muestres contraseñas.*
 
 **HABLAR:**
-«Entras con correo. Armás tu perfil: el nombre tiene que ser el mismo que aparece en la insignia.»
+«Entras a la cuenta demo del equipo. El perfil ya tiene el nombre de la insignia.»
 
 ### 4. Demo — leer y sellar (~50–70 s)
 
@@ -161,7 +161,7 @@ Si plan B: una sola frase: *«El lector usó el ejemplo de respaldo; el sello en
 
 - [ ] URL de Vercel (o localhost en la máquina de Danny).
 - [ ] Ventana limpia: sin `.env`, Discord, otras pestañas con keys.
-- [ ] Cuenta lista; nombre = `Danny Carvajal` si es plan B.
+- [ ] **Entrar al demo** visible (Danny cargó `KREDIAN_DEMO_*` en Vercel). Nombre = `Danny Carvajal` si es plan B.
 - [ ] Links de insignia copiados en un bloc (no buscarlos en cámara).
 - [ ] MetaMask **no** hace falta para el demo del equipo: el sello lo firma el backend.
 - [ ] Si Etherscan tarda, dejá el loader; no recortes a un fail.
