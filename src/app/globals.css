@@ -1,14 +1,14 @@
 @import "tailwindcss";
 
 :root {
-  --kredian-ink: #123f38;
-  --kredian-seal: #b8893a;
-  --background: #f3f6f4;
-  --foreground: #14241f;
-  --surface: #ffffff;
-  --muted: #4e615b;
-  --line: #d5e0db;
-  color-scheme: light;
+  --kredian-ink: #e8efe9;
+  --kredian-seal: #d4a45a;
+  --background: #070c0b;
+  --foreground: #e4ebe6;
+  --surface: #101816;
+  --muted: #8fa39b;
+  --line: #2a3b36;
+  color-scheme: dark;
 }
 
 @theme inline {
@@ -21,12 +21,31 @@
   --color-line: var(--line);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-instrument);
 }
 
 body {
-  background: var(--background);
+  background:
+    radial-gradient(1200px 640px at 12% -10%, rgba(212, 164, 90, 0.16), transparent 55%),
+    radial-gradient(900px 480px at 100% 0%, rgba(46, 90, 78, 0.28), transparent 50%),
+    var(--background);
   color: var(--foreground);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+body::before {
+  content: "";
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  opacity: 0.35;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");
+}
+
+body > * {
+  position: relative;
+  z-index: 1;
 }
 
 a:focus-visible,
@@ -37,21 +56,20 @@ textarea:focus-visible {
   outline-offset: 2px;
 }
 
-/* El botón real de comprobar, cuando se inserta en la tarjeta, hereda el look. */
 .hueco-sello button {
   border: 0;
   border-radius: 9999px;
-  background: var(--kredian-ink);
-  color: #fff;
+  background: var(--kredian-seal);
+  color: #1a1408;
   font-weight: 600;
 }
 
 .hueco-sello button:hover:not(:disabled) {
-  opacity: 0.92;
+  filter: brightness(1.06);
 }
 
 .hueco-sello a {
-  color: var(--kredian-ink);
+  color: var(--kredian-seal);
   font-weight: 600;
   text-underline-offset: 3px;
 }

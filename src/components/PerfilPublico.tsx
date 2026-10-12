@@ -34,9 +34,9 @@ export function PerfilPublico({
   }
 
   return (
-    <section className="rounded-3xl border border-line bg-surface p-5 shadow-sm">
+    <section className="rounded-[1.75rem] border border-line bg-surface/90 p-6 shadow-[0_24px_80px_-40px_rgba(212,164,90,0.45)]">
       {ejemplo ? (
-        <p className="text-xs font-semibold uppercase tracking-[0.14em] text-ink">Ejemplo</p>
+        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-seal">Ejemplo</p>
       ) : null}
 
       <div className={`flex items-center gap-3 ${ejemplo ? "mt-3" : ""}`}>
@@ -46,15 +46,15 @@ export function PerfilPublico({
           <img
             src={fotoUrl}
             alt=""
-            className="h-14 w-14 rounded-full border border-line object-cover"
+            className="h-14 w-14 rounded-full border border-seal/40 object-cover"
           />
         ) : (
-          <span className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-ink text-base font-semibold text-white">
+          <span className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-seal text-base font-semibold text-[#1a1408]">
             {iniciales(nombre)}
           </span>
         )}
         <div className="min-w-0">
-          <h2 className="truncate text-lg font-semibold text-ink">{nombre}</h2>
+          <h2 className="font-display truncate text-2xl text-ink">{nombre}</h2>
           <p className="truncate text-sm text-muted">/u/{usuario}</p>
         </div>
       </div>
@@ -62,12 +62,12 @@ export function PerfilPublico({
       {descripcion ? <p className="mt-4 text-sm leading-6 text-muted">{descripcion}</p> : null}
 
       {error ? (
-        <p role="alert" className="mt-4 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-900">
+        <p role="alert" className="mt-4 rounded-2xl border border-red-900/60 bg-red-950/50 px-4 py-3 text-sm text-red-200">
           {error}
         </p>
       ) : null}
 
-      <div className="mt-4 flex flex-col gap-3">
+      <div className="mt-5 flex flex-col gap-3">
         {credenciales.length === 0 ? (
           <div className="rounded-2xl border border-dashed border-line px-4 py-6 text-sm text-muted">
             <span className="mb-3 inline-flex">

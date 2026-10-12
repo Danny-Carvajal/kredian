@@ -8,19 +8,20 @@ export function Sello({ tamano = 32 }: { tamano?: number }) {
       viewBox="0 0 32 32"
       aria-hidden="true"
     >
-      <circle cx="16" cy="16" r="15" fill="#123f38" />
+      <circle cx="16" cy="16" r="15" fill="#d4a45a" />
       <circle
         cx="16"
         cy="16"
         r="12"
         fill="none"
-        stroke="#b8893a"
-        strokeWidth="1.35"
+        stroke="#1a1408"
+        strokeWidth="1.2"
+        opacity="0.45"
       />
       <path
         d="M12.2 9.1v13.8M12.2 16.1 20.8 9.1M12.2 16.1 20.8 22.9"
         fill="none"
-        stroke="#f3f6f4"
+        stroke="#1a1408"
         strokeWidth="2.15"
         strokeLinecap="square"
         strokeLinejoin="miter"
@@ -36,7 +37,7 @@ export function Marca({ tamano = 32 }: { tamano?: number }) {
       className="inline-flex items-center gap-2.5 text-ink"
     >
       <Sello tamano={tamano} />
-      <span className="text-lg font-semibold tracking-tight">Kredian</span>
+      <span className="font-display text-xl tracking-tight">Kredian</span>
     </Link>
   );
 }

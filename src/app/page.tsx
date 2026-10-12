@@ -12,34 +12,47 @@ const PASOS = [
 
 export default function Home() {
   return (
-    <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-16 px-6 py-14">
-      <section className="grid items-start gap-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
+    <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-20 px-6 py-16">
+      <section className="grid items-center gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
         <div>
-          <p className="flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.14em] text-ink">
-            <span className="inline-block h-2 w-2 rounded-full bg-seal" aria-hidden />
+          <p className="inline-flex items-center gap-2 rounded-full border border-seal/30 bg-seal/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-seal">
+            <span className="inline-block h-1.5 w-1.5 rounded-full bg-seal" aria-hidden />
             Verificador de certificaciones
           </p>
-          <h1 className="mt-4 text-5xl font-semibold tracking-tight text-ink sm:text-6xl">
-            Kredian
+          <h1 className="font-display mt-6 text-5xl leading-[1.05] text-ink sm:text-7xl">
+            Un sello que el CV
+            <span className="block text-seal">no puede mentir.</span>
           </h1>
-          <p className="mt-5 text-lg leading-8">
+          <p className="mt-6 max-w-xl text-lg leading-8 text-foreground/90">
             Kredian verifica las certificaciones tech que ya tenés (Credly) y
             deja un sello en blockchain que cualquier reclutador puede comprobar
             sin confiar en nosotros.
           </p>
-          <p className="mt-4 text-base leading-7 text-muted">
+          <p className="mt-4 max-w-xl text-base leading-7 text-muted">
             No somos emisores. Somos verificadores. No competimos con Credly, lo
             usamos como fuente.
           </p>
-          <Link
-            href="/login"
-            className="mt-8 inline-flex h-12 items-center justify-center rounded-full bg-ink px-8 text-base font-medium text-white transition-opacity hover:opacity-90"
-          >
-            Entrar
-          </Link>
+          <div className="mt-9 flex flex-wrap items-center gap-3">
+            <Link
+              href="/login"
+              className="inline-flex h-12 items-center justify-center rounded-full bg-seal px-8 text-base font-semibold text-[#1a1408] transition hover:brightness-110"
+            >
+              Entrar
+            </Link>
+            <a
+              href="#credencial"
+              className="inline-flex h-12 items-center justify-center rounded-full border border-line px-6 text-sm font-medium text-ink hover:border-seal/50"
+            >
+              Ver una credencial
+            </a>
+          </div>
         </div>
 
-        <div id="credencial">
+        <div id="credencial" className="relative">
+          <div
+            className="pointer-events-none absolute -inset-8 rounded-[2.5rem] bg-seal/10 blur-3xl"
+            aria-hidden
+          />
           <PerfilPublico
             ejemplo
             nombre="Tu nombre"
@@ -60,23 +73,23 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="grid gap-10 md:grid-cols-2" aria-labelledby="problema-titulo">
-        <div>
-          <h2 id="problema-titulo" className="text-2xl font-semibold tracking-tight text-ink">
+      <section className="grid gap-6 md:grid-cols-2" aria-labelledby="problema-titulo">
+        <div className="rounded-[1.75rem] border border-line bg-surface/80 p-7">
+          <h2 id="problema-titulo" className="font-display text-3xl text-ink">
             El problema
           </h2>
-          <ul className="mt-4 flex flex-col gap-3 text-base leading-7">
+          <ul className="mt-5 flex flex-col gap-3 text-base leading-7 text-foreground/90">
             <li>Cualquiera puede escribir «AWS Certified» en su CV o LinkedIn.</li>
             <li>Revisar cada certificado a mano le toma tiempo al reclutador.</li>
             <li>Las certificaciones vencen o se revocan y nadie se entera.</li>
           </ul>
         </div>
-        <div>
-          <h2 className="text-2xl font-semibold tracking-tight text-ink">Nuestra solución</h2>
-          <ol className="mt-4 flex flex-col gap-3">
+        <div className="rounded-[1.75rem] border border-line bg-surface/80 p-7">
+          <h2 className="font-display text-3xl text-ink">Nuestra solución</h2>
+          <ol className="mt-5 flex flex-col gap-4">
             {PASOS.map((paso, indice) => (
               <li key={paso} className="flex gap-3 text-base leading-7">
-                <span className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-ink text-xs font-semibold text-white">
+                <span className="mt-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-seal text-xs font-bold text-[#1a1408]">
                   {indice + 1}
                 </span>
                 <span>{paso}</span>
@@ -86,11 +99,17 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="rounded-3xl bg-ink px-6 py-8 text-white sm:px-10" aria-labelledby="blockchain-titulo">
-        <h2 id="blockchain-titulo" className="text-2xl font-semibold tracking-tight">
+      <section
+        className="overflow-hidden rounded-[2rem] border border-seal/25 bg-gradient-to-br from-seal/15 via-surface to-background px-7 py-10 sm:px-12"
+        aria-labelledby="blockchain-titulo"
+      >
+        <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-seal">
+          En cadena
+        </p>
+        <h2 id="blockchain-titulo" className="font-display mt-3 text-3xl text-ink sm:text-4xl">
           Por qué blockchain
         </h2>
-        <ul className="mt-4 flex flex-col gap-3 text-base leading-7 text-white/90">
+        <ul className="mt-6 grid gap-4 text-base leading-7 text-foreground/90 sm:grid-cols-2">
           <li>El sello es un testigo neutral: prueba que en tal fecha esa insignia existía y estaba vigente.</li>
           <li>Ni nosotros podemos alterarlo ni borrarlo, aunque cambiemos nuestra base de datos.</li>
           <li>El reclutador puede comprobar el sello en Etherscan sin confiar en Kredian.</li>
@@ -99,17 +118,17 @@ export default function Home() {
       </section>
 
       <section id="rangos" aria-labelledby="rangos-titulo">
-        <h2 id="rangos-titulo" className="text-2xl font-semibold tracking-tight text-ink">
+        <h2 id="rangos-titulo" className="font-display text-3xl text-ink">
           Rangos
         </h2>
         <p className="mt-2 max-w-2xl text-base leading-7 text-muted">
           Bronce, Plata, Oro y Platino. El perfil público muestra la insignia con su rango.
         </p>
-        <ul className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <ul className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
           {RANGOS.map((rango) => (
             <li
               key={rango}
-              className="flex items-center justify-center rounded-2xl border border-line bg-surface px-3 py-6"
+              className="flex items-center justify-center rounded-[1.5rem] border border-line bg-surface/80 px-3 py-8"
             >
               <InsigniaRango rango={rango} tamano="lg" />
             </li>
@@ -117,11 +136,11 @@ export default function Home() {
         </ul>
       </section>
 
-      <section aria-labelledby="honestidad-titulo" className="border-t border-line pt-8">
-        <h2 id="honestidad-titulo" className="text-lg font-semibold text-ink">
+      <section aria-labelledby="honestidad-titulo" className="border-t border-line pt-10">
+        <h2 id="honestidad-titulo" className="text-sm font-semibold uppercase tracking-[0.18em] text-seal">
           Con honestidad
         </h2>
-        <ul className="mt-3 flex max-w-3xl flex-col gap-2 text-sm leading-6 text-muted">
+        <ul className="mt-4 flex max-w-3xl flex-col gap-2 text-sm leading-6 text-muted">
           <li>Comparar nombres no prueba al 100% que la insignia sea tuya. Mejora futura: verificar correo.</li>
           <li>Leemos la página pública de Credly; no es una API oficial para terceros. Para producción haría falta un acuerdo.</li>
           <li>Usamos Sepolia (red de pruebas), no dinero real.</li>

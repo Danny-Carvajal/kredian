@@ -20,7 +20,7 @@ export default function ListaCredencialesPerfil({
   return (
     <section className="flex flex-col gap-4">
       <div>
-        <h2 className="font-medium text-ink">Tus credenciales</h2>
+        <h2 className="font-display text-2xl text-ink">Tus credenciales</h2>
         <p className="mt-1 text-sm text-muted">
           Si una todavía no tiene sello, mandala a Sepolia. El perfil público está en{" "}
           <Link href={`/u/${usuario}`} className="font-medium text-ink underline underline-offset-4">
