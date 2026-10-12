@@ -23,7 +23,7 @@ export async function Encabezado() {
         <Marca />
         <Link
           href={sesion ? "/perfil" : "/login"}
-          className="inline-flex h-10 items-center justify-center rounded-full bg-seal px-5 text-sm font-semibold text-[#1a1408] transition hover:brightness-110"
+          className="inline-flex h-10 items-center justify-center rounded-full bg-seal px-5 text-sm font-semibold text-[#06210f] transition hover:brightness-110"
         >
           {sesion ? "Perfil" : "Entrar"}
         </Link>

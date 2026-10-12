@@ -130,7 +130,7 @@ export default async function PerfilPage({ searchParams }: Props) {
         </label>
         <button
           type="submit"
-          className="h-12 rounded-full bg-seal text-base font-semibold text-[#1a1408] transition hover:brightness-110"
+          className="h-12 rounded-full bg-seal text-base font-semibold text-[#06210f] transition hover:brightness-110"
         >
           Guardar
         </button>
@@ -154,7 +154,7 @@ export default async function PerfilPage({ searchParams }: Props) {
         </label>
         <button
           type="submit"
-          className="mt-4 h-12 w-full rounded-full bg-seal text-base font-semibold text-[#1a1408] transition hover:brightness-110"
+          className="mt-4 h-12 w-full rounded-full bg-seal text-base font-semibold text-[#06210f] transition hover:brightness-110"
         >
           Leer insignia
         </button>

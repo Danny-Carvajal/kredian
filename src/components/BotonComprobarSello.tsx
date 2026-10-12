@@ -119,7 +119,7 @@ export default function BotonComprobarSello({ hash, txHash, datosCredencial }: P
           onClick={comprobar}
           disabled={cargando || sinDatos}
           aria-busy={cargando}
-          className="inline-flex cursor-pointer items-center gap-2 rounded-full bg-seal px-4 py-2 text-xs font-semibold text-[#1a1408] transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50"
+          className="inline-flex cursor-pointer items-center gap-2 rounded-full bg-wax px-4 py-2 text-xs font-semibold text-[#1a1408] transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {cargando ? (
             <>
@@ -142,7 +142,7 @@ export default function BotonComprobarSello({ hash, txHash, datosCredencial }: P
             href={linkEtherscan}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1 text-xs text-seal underline underline-offset-4 hover:text-ink"
+            className="flex items-center gap-1 text-xs text-wax underline underline-offset-4 hover:text-paper-ink"
           >
             {txHash ? "Ver transacción en Etherscan ↗" : "Ver contrato en Etherscan ↗"}
           </a>
@@ -154,7 +154,7 @@ export default function BotonComprobarSello({ hash, txHash, datosCredencial }: P
           <div
             className={`rounded-xl border p-2.5 text-xs ${
               resultado.verificado
-                ? "border-seal/40 bg-seal/10 text-ink"
+                ? "border-seal/50 bg-seal/15 text-paper-ink"
                 : "border-red-900/70 bg-red-950/50 text-red-100"
             }`}
           >

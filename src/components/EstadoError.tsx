@@ -28,7 +28,7 @@ export function EstadoError({
         <button
           type="button"
           onClick={() => retry()}
-          className="inline-flex h-11 items-center justify-center rounded-full bg-seal px-5 text-sm font-semibold text-[#1a1408] transition hover:brightness-110"
+          className="inline-flex h-11 items-center justify-center rounded-full bg-seal px-5 text-sm font-semibold text-[#06210f] transition hover:brightness-110"
         >
           Reintentar
         </button>

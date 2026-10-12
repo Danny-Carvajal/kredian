@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Hoja } from "@/components/Marca";
 import { InsigniaRango, RANGOS } from "@/components/InsigniaRango";
 import { PerfilPublico } from "@/components/PerfilPublico";
 
@@ -10,14 +11,29 @@ const PASOS = [
   "El perfil público muestra la insignia con su rango (Bronce a Platino) y el botón «Comprobar sello».",
 ];
 
+const VIAJE = [
+  {
+    titulo: "Planta",
+    texto: "La certificación ya vive afuera, en Credly. Nosotros no la emitimos: la leemos como algo que creció en otro lado.",
+  },
+  {
+    titulo: "Papel",
+    texto: "Esa insignia se vuelve un documento en tu perfil: nombre, emisor, fecha y estado, listos para un reclutador.",
+  },
+  {
+    titulo: "Sello",
+    texto: "Si el nombre cuadra, el hash queda lacrado en Sepolia. El papel se puede copiar; el sello, no.",
+  },
+];
+
 export default function Home() {
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-20 px-6 py-16">
       <section className="grid items-center gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
         <div>
-          <p className="inline-flex items-center gap-2 rounded-full border border-seal/30 bg-seal/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-seal">
-            <span className="inline-block h-1.5 w-1.5 rounded-full bg-seal" aria-hidden />
-            Verificador de certificaciones
+          <p className="inline-flex items-center gap-2 rounded-full border border-seal/35 bg-seal/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-seal">
+            <Hoja className="h-3.5 w-3.5 text-seal" />
+            De la planta al sello
           </p>
           <h1 className="font-display mt-6 text-5xl leading-[1.05] text-ink sm:text-7xl">
             Un sello que el CV
@@ -35,7 +51,7 @@ export default function Home() {
           <div className="mt-9 flex flex-wrap items-center gap-3">
             <Link
               href="/login"
-              className="inline-flex h-12 items-center justify-center rounded-full bg-seal px-8 text-base font-semibold text-[#1a1408] transition hover:brightness-110"
+              className="inline-flex h-12 items-center justify-center rounded-full bg-seal px-8 text-base font-semibold text-[#06210f] transition hover:brightness-110"
             >
               Entrar
             </Link>
@@ -43,14 +59,14 @@ export default function Home() {
               href="#credencial"
               className="inline-flex h-12 items-center justify-center rounded-full border border-line px-6 text-sm font-medium text-ink hover:border-seal/50"
             >
-              Ver una credencial
+              Ver el papel
             </a>
           </div>
         </div>
 
         <div id="credencial" className="relative">
           <div
-            className="pointer-events-none absolute -inset-8 rounded-[2.5rem] bg-seal/10 blur-3xl"
+            className="pointer-events-none absolute -inset-8 rounded-[2.5rem] bg-seal/12 blur-3xl"
             aria-hidden
           />
           <PerfilPublico
@@ -73,6 +89,29 @@ export default function Home() {
         </div>
       </section>
 
+      <section aria-labelledby="viaje-titulo">
+        <h2 id="viaje-titulo" className="font-display text-3xl text-ink">
+          Planta, papel, sello
+        </h2>
+        <p className="mt-2 max-w-2xl text-base leading-7 text-muted">
+          Así se lee Kredian: de algo vivo, a un documento, a un lacre que ya no depende de nosotros.
+        </p>
+        <ol className="mt-8 grid gap-4 md:grid-cols-3">
+          {VIAJE.map((paso, indice) => (
+            <li
+              key={paso.titulo}
+              className="rounded-[1.5rem] border border-line bg-surface/80 p-6"
+            >
+              <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-seal">
+                {String(indice + 1).padStart(2, "0")}
+              </p>
+              <h3 className="font-display mt-3 text-2xl text-ink">{paso.titulo}</h3>
+              <p className="mt-3 text-sm leading-6 text-muted">{paso.texto}</p>
+            </li>
+          ))}
+        </ol>
+      </section>
+
       <section className="grid gap-6 md:grid-cols-2" aria-labelledby="problema-titulo">
         <div className="rounded-[1.75rem] border border-line bg-surface/80 p-7">
           <h2 id="problema-titulo" className="font-display text-3xl text-ink">
@@ -89,7 +128,7 @@ export default function Home() {
           <ol className="mt-5 flex flex-col gap-4">
             {PASOS.map((paso, indice) => (
               <li key={paso} className="flex gap-3 text-base leading-7">
-                <span className="mt-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-seal text-xs font-bold text-[#1a1408]">
+                <span className="mt-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-seal text-xs font-bold text-[#06210f]">
                   {indice + 1}
                 </span>
                 <span>{paso}</span>
@@ -103,8 +142,8 @@ export default function Home() {
         className="overflow-hidden rounded-[2rem] border border-seal/25 bg-gradient-to-br from-seal/15 via-surface to-background px-7 py-10 sm:px-12"
         aria-labelledby="blockchain-titulo"
       >
-        <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-seal">
-          En cadena
+        <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-wax">
+          El lacre
         </p>
         <h2 id="blockchain-titulo" className="font-display mt-3 text-3xl text-ink sm:text-4xl">
           Por qué blockchain

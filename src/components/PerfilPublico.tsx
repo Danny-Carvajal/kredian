@@ -34,9 +34,9 @@ export function PerfilPublico({
   }
 
   return (
-    <section className="rounded-[1.75rem] border border-line bg-surface/90 p-6 shadow-[0_24px_80px_-40px_rgba(212,164,90,0.45)]">
+    <section className="papel rounded-[1.75rem] border border-black/10 p-6 text-paper-ink shadow-[0_28px_70px_-36px_rgba(12,28,20,0.65)]">
       {ejemplo ? (
-        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-seal">Ejemplo</p>
+        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-seal">Papel de ejemplo</p>
       ) : null}
 
       <div className={`flex items-center gap-3 ${ejemplo ? "mt-3" : ""}`}>
@@ -49,27 +49,27 @@ export function PerfilPublico({
             className="h-14 w-14 rounded-full border border-seal/40 object-cover"
           />
         ) : (
-          <span className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-seal text-base font-semibold text-[#1a1408]">
+          <span className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-seal text-base font-semibold text-[#06210f]">
             {iniciales(nombre)}
           </span>
         )}
         <div className="min-w-0">
-          <h2 className="font-display truncate text-2xl text-ink">{nombre}</h2>
-          <p className="truncate text-sm text-muted">/u/{usuario}</p>
+          <h2 className="font-display truncate text-2xl">{nombre}</h2>
+          <p className="truncate text-sm text-[#5e6f68]">/u/{usuario}</p>
         </div>
       </div>
 
-      {descripcion ? <p className="mt-4 text-sm leading-6 text-muted">{descripcion}</p> : null}
+      {descripcion ? <p className="mt-4 text-sm leading-6 text-[#5e6f68]">{descripcion}</p> : null}
 
       {error ? (
-        <p role="alert" className="mt-4 rounded-2xl border border-red-900/60 bg-red-950/50 px-4 py-3 text-sm text-red-200">
+        <p role="alert" className="mt-4 rounded-2xl border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-900">
           {error}
         </p>
       ) : null}
 
       <div className="mt-5 flex flex-col gap-3">
         {credenciales.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-line px-4 py-6 text-sm text-muted">
+          <div className="rounded-2xl border border-dashed border-black/15 px-4 py-6 text-sm text-[#5e6f68]">
             <span className="mb-3 inline-flex">
               <Sello tamano={28} />
             </span>

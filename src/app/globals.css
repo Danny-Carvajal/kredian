@@ -1,13 +1,16 @@
 @import "tailwindcss";
 
 :root {
-  --kredian-ink: #e8efe9;
-  --kredian-seal: #d4a45a;
-  --background: #070c0b;
-  --foreground: #e4ebe6;
-  --surface: #101816;
-  --muted: #8fa39b;
-  --line: #2a3b36;
+  --kredian-ink: #e7f3ec;
+  --kredian-seal: #4e9a6a;
+  --kredian-wax: #c4894a;
+  --kredian-paper: #f3ead8;
+  --kredian-paper-ink: #1c2a24;
+  --background: #07140f;
+  --foreground: #dceae1;
+  --surface: #0d1c16;
+  --muted: #8aa898;
+  --line: #234033;
   color-scheme: dark;
 }
 
@@ -16,6 +19,9 @@
   --color-foreground: var(--foreground);
   --color-ink: var(--kredian-ink);
   --color-seal: var(--kredian-seal);
+  --color-wax: var(--kredian-wax);
+  --color-paper: var(--kredian-paper);
+  --color-paper-ink: var(--kredian-paper-ink);
   --color-surface: var(--surface);
   --color-muted: var(--muted);
   --color-line: var(--line);
@@ -26,8 +32,8 @@
 
 body {
   background:
-    radial-gradient(1200px 640px at 12% -10%, rgba(212, 164, 90, 0.16), transparent 55%),
-    radial-gradient(900px 480px at 100% 0%, rgba(46, 90, 78, 0.28), transparent 50%),
+    radial-gradient(1000px 560px at 8% -8%, rgba(78, 154, 106, 0.22), transparent 55%),
+    radial-gradient(800px 420px at 100% 8%, rgba(196, 137, 74, 0.1), transparent 46%),
     var(--background);
   color: var(--foreground);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
@@ -39,8 +45,10 @@ body::before {
   position: fixed;
   inset: 0;
   z-index: 0;
-  opacity: 0.35;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");
+  opacity: 0.18;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cg fill='none' stroke='%234e9a6a' stroke-width='1.2' opacity='.55'%3E%3Cpath d='M28 132c18-28 22-52 8-78 22 10 34 32 30 58-18 8-30 14-38 20z'/%3E%3Cpath d='M36 54c8 14 6 28-2 40'/%3E%3Cpath d='M118 22c-16 26-12 48 6 72-24-4-38-22-40-48 14-10 26-16 34-24z'/%3E%3C/g%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.28'/%3E%3C/svg%3E");
 }
 
 body > * {
@@ -59,7 +67,7 @@ textarea:focus-visible {
 .hueco-sello button {
   border: 0;
   border-radius: 9999px;
-  background: var(--kredian-seal);
+  background: var(--kredian-wax);
   color: #1a1408;
   font-weight: 600;
 }
@@ -69,7 +77,14 @@ textarea:focus-visible {
 }
 
 .hueco-sello a {
-  color: var(--kredian-seal);
+  color: var(--kredian-wax);
   font-weight: 600;
   text-underline-offset: 3px;
+}
+
+.papel {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.35), transparent 28%),
+    var(--kredian-paper);
+  color: var(--kredian-paper-ink);
 }

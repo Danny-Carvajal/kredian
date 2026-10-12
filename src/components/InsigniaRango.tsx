@@ -50,7 +50,7 @@ export function InsigniaRango({
   return (
     <span className={`inline-flex items-center gap-2 ${apilada ? "flex-col text-center" : "gap-2.5"}`}>
       <Medalla metal={meta.metal} tinta={meta.tinta} tamano={medida.medalla} />
-      <span className={`font-semibold text-foreground ${medida.texto}`}>{meta.nombre}</span>
+      <span className={`font-semibold ${medida.texto}`}>{meta.nombre}</span>
     </span>
   );
 }
