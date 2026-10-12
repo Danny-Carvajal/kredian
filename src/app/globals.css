@@ -30,7 +30,12 @@
   --font-display: var(--font-instrument);
 }
 
+html {
+  overflow-x: hidden;
+}
+
 body {
+  overflow-x: hidden;
   background:
     radial-gradient(1000px 560px at 8% -8%, rgba(78, 154, 106, 0.22), transparent 55%),
     radial-gradient(800px 420px at 100% 8%, rgba(196, 137, 74, 0.1), transparent 46%),

@@ -27,7 +27,7 @@ export default function PerfilPublicoVista({
   const titulo = perfil.nombre?.trim() || perfil.usuario;
 
   return (
-    <div className="mx-auto flex w-full max-w-xl flex-1 flex-col gap-8 px-6 py-16">
+    <div className="mx-auto flex w-full max-w-xl min-w-0 flex-1 flex-col gap-8 px-4 py-10 sm:px-6 sm:py-16">
       <PerfilPublico
         nombre={titulo}
         usuario={perfil.usuario}

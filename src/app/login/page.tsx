@@ -27,8 +27,8 @@ export default async function LoginPage({ searchParams }: Props) {
   const configurado = isSupabaseConfigured();
 
   return (
-    <div className="flex flex-1 flex-col items-center px-6 py-12">
-      <main className="flex w-full max-w-md flex-col gap-6 rounded-[1.75rem] border border-line bg-surface/90 px-6 py-8 shadow-[0_24px_80px_-40px_rgba(78,154,106,0.35)]">
+    <div className="flex flex-1 flex-col items-center px-4 py-8 sm:px-6 sm:py-12">
+      <main className="flex w-full max-w-md flex-col gap-6 rounded-[1.75rem] border border-line bg-surface/90 px-5 py-7 shadow-[0_24px_80px_-40px_rgba(78,154,106,0.35)] sm:px-6 sm:py-8">
         <div>
           <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-seal">Kredian</p>
           <h1 className="font-display mt-2 text-4xl text-ink">Entrar</h1>
