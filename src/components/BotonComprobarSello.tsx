@@ -142,7 +142,7 @@ export default function BotonComprobarSello({ hash, txHash, datosCredencial }: P
             href={linkEtherscan}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1 text-xs text-wax underline underline-offset-4 hover:text-paper-ink"
+            className="flex items-center gap-1 text-xs text-wax underline underline-offset-4 hover:text-ink"
           >
             {txHash ? "Ver transacción en Etherscan ↗" : "Ver contrato en Etherscan ↗"}
           </a>
