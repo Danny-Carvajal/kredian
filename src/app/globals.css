@@ -52,7 +52,7 @@ body::before {
   z-index: 0;
   opacity: 0.18;
   background-image:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cg fill='none' stroke='%234e9a6a' stroke-width='1.2' opacity='.55'%3E%3Cpath d='M28 132c18-28 22-52 8-78 22 10 34 32 30 58-18 8-30 14-38 20z'/%3E%3Cpath d='M36 54c8 14 6 28-2 40'/%3E%3Cpath d='M118 22c-16 26-12 48 6 72-24-4-38-22-40-48 14-10 26-16 34-24z'/%3E%3C/g%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cg fill='none' stroke='%234e9a6a' stroke-width='1.2' stroke-linecap='round' opacity='.55'%3E%3Cg transform='translate(2 8) rotate(-28 40 72)'%3E%3Cpath d='M40 6C62 18 74 42 68 72C64 90 50 100 40 100C30 100 16 90 12 72C6 42 18 18 40 6Z'/%3E%3Cpath d='M40 14V94'/%3E%3C/g%3E%3Cg transform='translate(88 2) rotate(152 36 52)'%3E%3Cpath d='M36 4C54 14 64 34 60 58C57 72 46 80 36 80C26 80 15 72 12 58C8 34 18 14 36 4Z'/%3E%3Cpath d='M36 12V74'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"),
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.28'/%3E%3C/svg%3E");
 }
 

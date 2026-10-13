@@ -32,16 +32,22 @@ export function Hoja({ className }: { className?: string }) {
       fill="none"
     >
       <path
-        d="M10 38c12-18 16-28 6-34 16 8 24 22 22 34-12 4-20 6-28 0z"
+        d="M24 2.4C36.5 9.2 43.2 21.5 40.4 34.2C38.2 42.2 31.4 46.6 24 46.6C16.6 46.6 9.8 42.2 7.6 34.2C4.8 21.5 11.5 9.2 24 2.4Z"
         fill="currentColor"
         opacity="0.9"
       />
-      <path
-        d="M16 12c6 8 8 16 6 26"
+      <g
         stroke="#07140f"
-        strokeWidth="1.4"
-        opacity="0.45"
-      />
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="none"
+        opacity="0.42"
+      >
+        <path d="M24 6.2V44.4" strokeWidth="1.35" />
+        <path d="M24 15L33.2 22.2M24 15L14.8 22.2" strokeWidth="1" />
+        <path d="M24 25.2L33.8 32.6M24 25.2L14.2 32.6" strokeWidth="1" />
+        <path d="M24 34.6L31 40.2M24 34.6L17 40.2" strokeWidth="1" />
+      </g>
     </svg>
   );
 }
